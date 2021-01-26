@@ -1,0 +1,36 @@
+create SEQUENCE seq_board;
+
+//create board
+create table tbl_board(
+bno number(10,0),
+title varchar2(200) not null,
+content varchar2(200)not null,
+writer varchar2(50)not null,
+regdate date default sysdate,
+updatedate date default sysdate,
+category varchar2(20) not null);
+
+alter table tbl_board add constraint pk_board primary key(bno);
+
+//create reply
+create table tbl_reply(
+rno number(10,0) primary key,
+bno number(10,0) not null references tbl_board(bno),
+reply varchar2(1000) not null,
+replyer varchar2(50) not null,
+replyDate date default sysdate,
+updateDate date default sysdate,
+password varchar2(20)
+);
+
+//sequence create
+create sequence seq_reply;
+
+
+//attach file
+create table tbl_attach(
+    uuid varchar2(100) not null primary key,
+    uploadPath varchar2(200) not null,
+    fileName varchar2(100)not null,
+    bno number(10,0) REFERENCES tbl_board(bno)
+    );
