@@ -24,8 +24,10 @@ import com.flowerchest.domain.BoardVO;
 import com.flowerchest.domain.Criteria;
 import com.flowerchest.domain.PageDTO;
 import com.flowerchest.service.BoardService;
+import com.flowerchest.service.ReplyService;
 
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import oracle.jdbc.proxy.annotation.Post;
 
@@ -36,6 +38,7 @@ import oracle.jdbc.proxy.annotation.Post;
 public class BoardController {
 	
 	private BoardService service;
+	
 	
 	//loading post list
 	@GetMapping("/list")

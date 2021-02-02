@@ -45,7 +45,6 @@ import com.flowerchest.domain.AttachFileDTO;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
-import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @Log4j
@@ -118,7 +117,6 @@ public class UploadController {
 		String uploadFolderPath = getFolder();
 
 		File uploadPath = new File(uploadFolder, uploadFolderPath);
-		
 
 		// make yyyy/mm/dd folder
 		if (uploadPath.exists() == false) {
@@ -134,8 +132,6 @@ public class UploadController {
 			attachDTO.setFileName(uploadFileName);
 			UUID uuid = UUID.randomUUID();
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);// IE Browser
-
-			
 
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 
@@ -187,35 +183,33 @@ public class UploadController {
 	// file download
 	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
-	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent")String userAgent,String fileName) {
+	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent, String fileName) {
 
 		Resource resource = new FileSystemResource("C:\\upload\\" + fileName);
-		if(!resource.exists()) {
+		if (!resource.exists()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		String resourceName = resource.getFilename();
 
 		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_") + 1);
-		
+
 		HttpHeaders headers = new HttpHeaders();
 
 		try {
 			String downloadName = null;
-			
-			//IE browser
-			if(userAgent.contains("Trident")) {
-				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8").replace("\\+", " ");
+
+			// IE browser
+			if (userAgent.contains("Trident")) {
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8").replace("\\+", " ");
 			}
-			//Edge Browser
-			else if(userAgent.contains("Edge")) {
-				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8");
+			// Edge Browser
+			else if (userAgent.contains("Edge")) {
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8");
+			} else {
+				downloadName = new String(resourceOriginalName.getBytes("UTF-8"), "ISO-8859-1");
 			}
-			else {
-				downloadName = new String(resourceOriginalName.getBytes("UTF-8"),"ISO-8859-1");
-			}
-				
-			headers.add("Content-Disposition",
-					"attachment; filename=" + downloadName);
+
+			headers.add("Content-Disposition", "attachment; filename=" + downloadName);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -223,136 +217,145 @@ public class UploadController {
 
 		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
 	}// file download end
-	
+
 	@PostMapping("/deleteFile")
 	@ResponseBody
-	public ResponseEntity<String> deleteFile(String fileName,String type){
-		
+	public ResponseEntity<String> deleteFile(String fileName, String type) {
+
 		File file;
 		try {
-			
-			file = new File("C:\\upload\\" + URLDecoder.decode(fileName,"UTF-8"));
-			
+
+			file = new File("C:\\upload\\" + URLDecoder.decode(fileName, "UTF-8"));
+
 			file.delete();
-			
-			if(type.equals("image")) {
+
+			if (type.equals("image")) {
 				String largeFileName = file.getAbsolutePath().replace("s_", "");
-				
+
 				file = new File(largeFileName);
-				
+
 				file.delete();
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<String>("deleted",HttpStatus.OK);
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
 	}
-	
-	
-	//ckeditor image upload to server
+
+	// ckeditor image upload to server
 	@RequestMapping(value = "/imageUpload", method = RequestMethod.POST)
-	   public void imageUpload(HttpServletRequest request,
-	            HttpServletResponse response, MultipartHttpServletRequest multiFile
-	            , @RequestParam MultipartFile upload) throws Exception{
-	        // 랜덤 문자 생성
-		
-	        UUID uuid = UUID.randomUUID();
-			String uploadFolder = "C:\\upload";
+	public void imageUpload(HttpServletRequest request, HttpServletResponse response,
+			MultipartHttpServletRequest multiFile, @RequestParam MultipartFile upload) throws Exception {
+		// 랜덤 문자 생성
 
-			String uploadFolderPath = getFolder();
+		UUID uid = UUID.randomUUID();
 
-			File uploadPath = new File(uploadFolder, uploadFolderPath);
-			
-			String uploadFileName = upload.getOriginalFilename();
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);// IE Browser
+		OutputStream out = null;
+		PrintWriter printWriter = null;
 
-			uploadFileName = uuid.toString() + "_" + uploadFileName;
-			// make yyyy/mm/dd folder
-			if (uploadPath.exists() == false) {
-				uploadPath.mkdirs();
+		// 인코딩
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+
+		try {
+
+			// Request File Name
+			String fileName = upload.getOriginalFilename();
+			byte[] bytes = upload.getBytes();
+
+			// Create File Path
+			String uploadPath = "C:\\imageUploaded\\";// fileDir는 전역 변수라 그냥 이미지 경로 설정해주면 된다.
+			String ckUploadPath = uploadPath + uid + "_" + fileName;
+			File folder = new File(uploadPath);
+
+			//Check folder
+			if (!folder.exists()) {
+				try {
+					folder.mkdirs(); // 폴더 생성
+				} catch (Exception e) {
+					e.getStackTrace();
+				}
 			}
-	        OutputStream out = null;
-	        PrintWriter printWriter = null;
-	        
-	        //인코딩
-	        response.setCharacterEncoding("utf-8");
-	        response.setContentType("text/html;charset=utf-8");
-	        
-	        try{
-    
-	            File saveFile = new File(uploadPath, uploadFileName);
-	            upload.transferTo(saveFile);
-	            
-	            String callback = request.getParameter("CKEditorFuncNum");
-	            printWriter = response.getWriter();
-	            String fileUrl = "/imgSubmit?uuid=" + uuid + "&fileName=" + uploadFileName;  // 작성화면
-	            
-	        // 업로드시 메시지 출력
-	          printWriter.println("{\"filename\" : \""+uploadFileName+"\", \"uploaded\" : 1, \"url\":\""+fileUrl+"\"}");
-	          printWriter.flush();
-	            
-	        }catch(IOException e){
-	            e.printStackTrace();
-	        } finally {
-	          try {
-	           if(out != null) { out.close(); }
-	           if(printWriter != null) { printWriter.close(); }
-	          } catch(IOException e) { e.printStackTrace(); }
-	         }
-	        
-	        return;
-	    }//ckeditor end
-	
-	//create image thumbnail
-	 @RequestMapping(value="/imgSubmit")
-	    public void ckSubmit(@RequestParam(value="uuid") String uuid
-	                            , @RequestParam(value="fileName") String fileName
-	                            , HttpServletRequest request, HttpServletResponse response)
-	 throws ServletException, IOException{
-		 	String uploadFolder = "C:\\upload";
 
-			String uploadFolderPath = getFolder();
+			out = new FileOutputStream(new File(ckUploadPath));
+			out.write(bytes);
+			out.flush(); 
 
-			File uploadPath = new File(uploadFolder, uploadFolderPath);
-			
-			
-			File saveFile = new File(uploadPath,fileName);
-	        //사진 이미지 찾지 못하는 경우 예외처리로 빈 이미지 파일을 설정한다.
-	        if(saveFile.isFile()){
-	            byte[] buf = new byte[1024];
-	            int readByte = 0;
-	            int length = 0;
-	            byte[] imgBuf = null;
-	            
-	            FileInputStream fileInputStream = null;
-	            ByteArrayOutputStream outputStream = null;
-	            ServletOutputStream out = null;
-	            
-	            try{
-	                fileInputStream = new FileInputStream(saveFile);
-	                outputStream = new ByteArrayOutputStream();
-	                out = response.getOutputStream();
-	                
-	                while((readByte = fileInputStream.read(buf)) != -1){
-	                    outputStream.write(buf, 0, readByte);
-	                }
-	                
-	                imgBuf = outputStream.toByteArray();
-	                length = imgBuf.length;
-	                out.write(imgBuf, 0, length);
-	                out.flush();
-	                
-	            }catch(IOException e){
-	                log.info(e);
-	            }finally {
-	                outputStream.close();
-	                fileInputStream.close();
-	                out.close();
-	            }
-	        }
-	    }//ckSubmit end
+			String callback = request.getParameter("CKEditorFuncNum");
+			printWriter = response.getWriter();
+			String fileUrl = "/imgSubmit?uid=" + uid + "&fileName=" + fileName; // 작성화면
+
+			//Print Upload Messages
+			printWriter.println("{\"filename\" : \"" + fileName + "\", \"uploaded\" : 1, \"url\":\"" + fileUrl + "\"}");
+			printWriter.flush();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (out != null) {
+					out.close();
+				}
+				if (printWriter != null) {
+					printWriter.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return;
+	}
+
+	// create image thumbnail
+	@RequestMapping(value = "/imgSubmit")
+	public void ckSubmit(@RequestParam(value = "uid") String uid,
+			@RequestParam(value = "fileName") String fileName,
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+		String uploadPath = "C:\\imageUploaded\\";
+
+		String sDirPath = uploadPath + uid + "_" + fileName;
+
+		File imgFile = new File(sDirPath);
+
+
+		if (imgFile.isFile()) {
+			byte[] buf = new byte[1024];
+			int readByte = 0;
+			int length = 0;
+			byte[] imgBuf = null;
+
+			FileInputStream fileInputStream = null;
+			ByteArrayOutputStream outputStream = null;
+			ServletOutputStream out = null;
+
+			try {
+				fileInputStream = new FileInputStream(imgFile);
+				outputStream = new ByteArrayOutputStream();
+				out = response.getOutputStream();
+
+				while ((readByte = fileInputStream.read(buf)) != -1) {
+					outputStream.write(buf, 0, readByte);
+				}
+
+				imgBuf = outputStream.toByteArray();
+				length = imgBuf.length;
+				out.write(imgBuf, 0, length);
+				out.flush();
+
+			} catch (IOException e) {
+				log.info(e);
+			} finally {
+				outputStream.close();
+				fileInputStream.close();
+				out.close();
+			}
+		}
+	}
 
 }

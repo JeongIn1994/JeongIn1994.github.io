@@ -236,7 +236,9 @@ $(document).ready(function(){
 		console.log(operation);
 		
 		if(operation ==='remove'){
+			if(confirm("Delete This Post?")){
 			formObj.attr("action","/board/remove");
+			}
 		}else if(operation ==='list'){
 			
 			formObj.attr("action","/board/list").attr("method","get");
