@@ -97,7 +97,9 @@
 					
 					<button type="reset" class="btn btn-info">Reset</button>	
 					
-					<button type="button" class="btn btn-danger" onclick='history.back();'>Cancel</button>							
+					<button type="button" class="btn btn-danger" onclick='history.back();'>Cancel</button>	
+							
+					
 				</form>
 				<!-- form end -->
 		</div>
