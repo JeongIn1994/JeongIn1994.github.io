@@ -251,7 +251,7 @@ public class UploadController {
 			MultipartHttpServletRequest multiFile, @RequestParam MultipartFile upload) throws Exception {
 		// 랜덤 문자 생성
 
-		UUID uid = UUID.randomUUID();
+		UUID uuid = UUID.randomUUID();
 
 		OutputStream out = null;
 		PrintWriter printWriter = null;
@@ -268,7 +268,7 @@ public class UploadController {
 
 			// Create File Path
 			String uploadPath = "C:\\imageUploaded\\";// fileDir는 전역 변수라 그냥 이미지 경로 설정해주면 된다.
-			String ckUploadPath = uploadPath + uid + "_" + fileName;
+			String ckUploadPath = uploadPath + uuid + "_" + fileName;
 			File folder = new File(uploadPath);
 
 			//Check folder
@@ -286,7 +286,7 @@ public class UploadController {
 
 			String callback = request.getParameter("CKEditorFuncNum");
 			printWriter = response.getWriter();
-			String fileUrl = "/imgSubmit?uid=" + uid + "&fileName=" + fileName; // 작성화면
+			String fileUrl = "/imgSubmit?uuid=" + uuid + "&fileName=" + fileName; // 작성화면
 
 			//Print Upload Messages
 			printWriter.println("{\"filename\" : \"" + fileName + "\", \"uploaded\" : 1, \"url\":\"" + fileUrl + "\"}");
@@ -312,14 +312,14 @@ public class UploadController {
 
 	// create image thumbnail
 	@RequestMapping(value = "/imgSubmit")
-	public void ckSubmit(@RequestParam(value = "uid") String uid,
+	public void ckSubmit(@RequestParam(value = "uuid") String uuid,
 			@RequestParam(value = "fileName") String fileName,
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
 		String uploadPath = "C:\\imageUploaded\\";
 
-		String sDirPath = uploadPath + uid + "_" + fileName;
+		String sDirPath = uploadPath + uuid + "_" + fileName;
 
 		File imgFile = new File(sDirPath);
 

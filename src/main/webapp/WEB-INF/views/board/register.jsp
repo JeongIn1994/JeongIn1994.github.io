@@ -72,7 +72,7 @@
                					
             			</textarea>
             			<script>
-                			CKEDITOR.replace( 'editor',{filebrowserUploadUrl:'/imageUpload'});
+                			CKEDITOR.replace('editor', {filebrowserUploadUrl:'<c:url value="/imageUpload" />?${_csrf.parameterName}=${_csrf.token}'} );
                 			CKEDITOR.config.resize_enabled = false;
                 			CKEDITOR.config.height = 280;
                 			CKEDITOR.config.image_previewText = 'Image Thumbnail';
