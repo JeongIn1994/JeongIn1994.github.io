@@ -48,6 +48,8 @@
 			<!-- panel body start -->
 			<div class="panel-body" style="padding: 5px"></div>
 				<form role="form" action="/board/register" method="post">
+				 <input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
+				
 				<h5>Category</h5>
 					<div class="custom-control custom-radio custom-control-inline">
    						<input type="radio" class="custom-control-input" id="customRadio" name="category" value="Common" checked>
@@ -80,6 +82,7 @@
             			</script>					
 					</div>
 					
+					
 					<div style="border-bottom: 1px dashed gray; border-top: 1px dashed gray; margin-bottom: 10px; padding: 10px;">
 						<i class="fa fa-files-o" aria-hidden="true"></i>Attch Files
 						<div>
@@ -92,7 +95,8 @@
 							</ul>
 						</div>
 					</div>	
-															
+					
+									
 					<button type="submit" class="btn btn-primary">Submit</button>
 					
 					<button type="reset" class="btn btn-info">Reset</button>	

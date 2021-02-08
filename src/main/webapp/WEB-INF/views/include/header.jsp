@@ -27,6 +27,22 @@
 .navbar-nav li{
 	padding: 5px;
 }
+body{
+ 	background-color: rgba(245, 245 ,220, .5);
+ }
+
+.carousel-control-next-icon:after
+{
+  content: '>';
+  font-size: 55px;
+  color: red;
+}
+
+.carousel-control-prev-icon:after {
+  content: '<';
+  font-size: 55px;
+  color: red;
+}
 
 </style>
 </head>
