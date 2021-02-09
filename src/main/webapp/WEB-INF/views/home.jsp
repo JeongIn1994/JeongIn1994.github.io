@@ -3,6 +3,7 @@
 <%@include file="include/header.jsp"%>
 
 <div class="row">
+	<!-- slide part -->
 	<div id="demo" class="carousel slide col-9" data-ride="carousel">
 		<!-- Indicators -->
 		<ul class="carousel-indicators">
@@ -30,6 +31,7 @@
 			class="carousel-control-next-icon" aria-hidden="true"></span>
 		</a>
 	</div>
+	<!-- login console part -->
 	<div class="col-3" style="background-color: gray;">
 		login console
 	</div>

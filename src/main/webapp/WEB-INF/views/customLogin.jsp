@@ -24,6 +24,9 @@
 		</div>
 		
 		<div>
+			<input type="checkbox" name='remember-me'>Auto Login
+		</div>
+		<div>
 			<input type="submit">
 		</div>
 		
