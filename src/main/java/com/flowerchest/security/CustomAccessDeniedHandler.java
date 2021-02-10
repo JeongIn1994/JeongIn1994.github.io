@@ -10,7 +10,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import jdk.internal.org.jline.utils.Log;
-
+import lombok.extern.log4j.Log4j;
+@Log4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 	@Override
@@ -18,9 +19,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		
-		Log.error("Access Demied Handler");
+		log.error("Access Demied Handler");
 		
-		Log.error("Redirect....");
+		log.error("Redirect....");
 		
 		response.sendRedirect("/accessError");
 

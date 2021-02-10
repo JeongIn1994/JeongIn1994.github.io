@@ -22,7 +22,7 @@ public class CommonController {
 	}
 	
 	//login page
-	@GetMapping("/customLogin")
+	@GetMapping("/Logins")
 	public void loginInput(String error,String logout,Model model) {
 		
 		if(error != null) {
