@@ -64,7 +64,7 @@
 										aria-hidden="true"></i> Forget ID/PW</a>
 								</div>
 								<div class='col-sm-6' style="text-align: right;">
-									<a href='#' style="color: navy;"><i class="fa fa-plus"
+									<a href='/member/conditionsOfUse' style="color: navy;"><i class="fa fa-plus"
 										aria-hidden="true"></i> Create New Account</a>
 								</div>
 							</div>
