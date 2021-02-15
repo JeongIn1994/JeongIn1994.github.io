@@ -34,4 +34,10 @@
  		Where mem.userid = #{userid}		
  	</select>
  	
+ 	<insert id="insert">
+ 		Insert Into 
+ 			tbl_member(userid, userpw, username,address, phonenumber)
+ 		Values(#{userid},#{userpw},#{userName},#{address},#{phoneNumber})
+ 	</insert>
+ 	
  </mapper>

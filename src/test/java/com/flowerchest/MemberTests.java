@@ -29,4 +29,16 @@ public class MemberTests {
 
 		vo.getAuthList().forEach(authVO -> log.info(authVO));
 	}
+	
+	public void testReg() {
+		
+		MemberVO vo = new MemberVO();
+		vo.setAddress("test");
+		vo.setPhoneNumber("1234");
+		vo.setUserid("test");
+		vo.setUserpw("1234");
+		vo.setUserName("test");
+		
+		mapper.insert(vo);
+	}
 }
