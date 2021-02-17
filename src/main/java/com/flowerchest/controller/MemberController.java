@@ -1,7 +1,11 @@
 package com.flowerchest.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,7 +23,7 @@ public class MemberController {
 	private MemberService service;
 	
 	//new account page
-	@GetMapping("/register")
+	@GetMapping({"/register","/conditionsOfUse","/registComplete"})
 	public void memberReg() {
 		
 	}
@@ -44,14 +48,13 @@ public class MemberController {
 		
 	}
 	
-	//
-	@GetMapping("/conditionsOfUse")
-	public void conChk() {
+	
+	//Check Id with ajax
+	@GetMapping(value = "/checkId/{userid}",produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_UTF8_VALUE} )
+	public ResponseEntity<MemberVO> chkId(@PathVariable("userid")String userId){
 		
+		return new ResponseEntity<>(service.get(userId),HttpStatus.OK);		
 	}
-	@GetMapping("/registComplete")
-	public void regComp() {
-		
-	}
+	
 	
 }

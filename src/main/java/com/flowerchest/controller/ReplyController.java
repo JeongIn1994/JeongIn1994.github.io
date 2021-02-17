@@ -24,7 +24,6 @@ import lombok.extern.log4j.Log4j;
 
 @RequestMapping("/replies/*")
 @RestController
-@Log4j
 @AllArgsConstructor
 public class ReplyController {
 

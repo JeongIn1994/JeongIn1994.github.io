@@ -33,4 +33,10 @@ public class MemberServiceImpl implements MemberService {
 		mapper.insert(vo);
 	}
 
+	@Override
+	public MemberVO get(String userId) {
+		// TODO Auto-generated method stub
+		return mapper.read(userId);
+	}
+
 }

@@ -40,4 +40,6 @@
  		Values(#{userid},#{userpw},#{userName},#{address},#{phoneNumber})
  	</insert>
  	
+ 	
+ 	
  </mapper>
