@@ -32,7 +32,8 @@
 		<!-- login console part -->
 		<div class="col-3" style="background-color: gray;">
 			<div class="LoginPanel-heading" style="border-bottom: 1px solid black">
-				<form role="form" action="/Logins" method="get">
+				<form role="form" action="/Logins" method="post">
+					<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
 					<sec:authentication property="principal" var="pinfo" />
 					<c:choose>
 						<c:when test="${pinfo ne 'anonymousUser' }">
@@ -45,7 +46,7 @@
 										aria-hidden="true"></i> User Page </a>
 								</div>
 								<div class='col-sm-6' style="text-align: right;">
-									<a href='#' style="color: navy;"><i class="fa fa-sign-out"
+									<a href='#' id='logout' style="color: navy;"><i class="fa fa-sign-out"
 										aria-hidden="true"></i> Logaout</a>
 								</div>
 							</div>
@@ -132,6 +133,15 @@
 			form.attr('action', '/Logins');
 			form.submit();
 		});
+		
+		$('#logout').on('click',function(e){
+			
+			
+			$('form[role="form"]').attr('action','/Logout');
+			
+			$('form[role="form"]').submit();
+			
+		})
 	});
 </script>
 </body>

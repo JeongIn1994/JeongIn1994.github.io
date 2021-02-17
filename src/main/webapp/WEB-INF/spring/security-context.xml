@@ -12,17 +12,11 @@
 <bean id="customUserDetailsService" class="com.flowerchest.security.CustomUserDetailsService" />
 	<security:http>
 		
-		<security:intercept-url pattern="/sample/all" access="permitAll"/>
-		
-		<security:intercept-url pattern="/sample/member" access="hasRole('user')"/>
-		
-		<security:intercept-url pattern="/sample/admin" access="hasRole('admin')"/>
-		
 		<security:access-denied-handler ref="customAccessDenied"/>
 		
 		<security:form-login login-page="/Logins" />
 		
-		<security:logout invalidate-session="true" logout-url="/customLogout" delete-cookies="remember-me,JSESSION_ID"/>
+		<security:logout invalidate-session="true" logout-url="/Logout" delete-cookies="remember-me,JSESSION_ID"/>
 		
 		<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 	

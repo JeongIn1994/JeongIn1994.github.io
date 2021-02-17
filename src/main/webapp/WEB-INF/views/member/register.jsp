@@ -198,14 +198,14 @@
 								if(Object.keys(data).length>0){
 									$('#idFormSpan').html('<p style="color : red;"><i class="fa fa-ban" aria-hidden="true">This Id Is Already Exist !</i></p>');
 									idChk = false;									
-								}
-								//whem user id not exist								
+								}												
 							
 							}).fail(function(xhr,status,err){
 								if(error){
 									console.log(error);
 								}
 							});//fail end
+					//whem user id not exist	
 					$('#idFormSpan').html('<p style="color : green;"><i class="fa fa-check" aria-hidden="true">You Can use This ID</i></p>');
 					idChk = true;
 				}//else end
