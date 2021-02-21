@@ -20,18 +20,17 @@ public class CommonController {
 		model.addAttribute("msg","Access Denied!");
 		
 	}
-	
+
 	//login page
 	@GetMapping("/Logins")
 	public void loginInput(String error,String logout,Model model) {
 		
 		if(error != null) {
-			model.addAttribute("error","Login Error ! Check Your Account !");
+			model.addAttribute("error",true);
 		}
 		if(logout != null) {
 			
-			model.addAttribute("logout","Logout!");
+			model.addAttribute("logout",true);
 		}
 	}
-
 }

@@ -33,10 +33,11 @@
 		<div class="col-3" style="background-color: gray;">
 			<div class="LoginPanel-heading" style="border-bottom: 1px solid black">
 				<form role="form" action="/Logins" method="post">
-					<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
+
 					<sec:authentication property="principal" var="pinfo" />
 					<c:choose>
 						<c:when test="${pinfo ne 'anonymousUser' }">
+							<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
 							<div class='loginPanel'>
 								<h3>Welcome, <c:out value="${pinfo.username }"/> !</h3>
 							</div>
@@ -130,7 +131,8 @@
 
 		$(".login").on('click', function(e) {
 			e.preventDefault();
-			form.attr('action', '/Logins');
+			form.attr('method', 'get');
+			form.attr('action', '/Logins/');
 			form.submit();
 		});
 		
