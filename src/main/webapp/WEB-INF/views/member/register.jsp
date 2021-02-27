@@ -21,26 +21,26 @@
 			<form action="/member/register" method="post" role="form">
 				<!-- Name Input -->
 				<div class="form-group" >
-					<label for="usr">* Name : </label> 
-					<input type="text" id="userName" name='userName' placeholder="At least 4 characters Maximum 14 characters">
+					<label for="usr">* Name : &emsp;&emsp;&emsp;&emsp;&emsp; </label> 
+					<input type="text" id="userName" name='userName' placeholder="At least 4 characters Maximum 14 characters" size="45">
 					<div><span id='nameFormSpan'></span></div>
 				</div>
 				<!-- Id Input -->
 				<div class="form-group">
-					<label for="usr">* ID : </label> 
-					<input type="text" id="userID" name='userid' placeholder="At least 6 characters Maximum 12 characters">
+					<label for="usr">* ID : &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;</label> 
+					<input type="text" id="userID" name='userid' placeholder="At least 6 characters Maximum 12 characters" size="45">
 					<button name='idChk'>Check</button>
 					<div><span id='idFormSpan'></span></div>
 				</div>
 				<!-- Pw Input -->
 				<div class="form-group">
-					<label for="usr">* Password : </label> 
-					<input type="password" id="userpw" name='userpw' placeholder="At least 8 characters Maximum 16 characters">
+					<label for="usr">* Password :&emsp;&emsp;&emsp;&ensp; </label> 
+					<input type="password" id="userpw" name='userpw' placeholder="At least 8 characters Maximum 16 characters" size="45">
 					<div><span id='pwFormSpan'></span></div>
 				</div>
 				<div class="form-group">
-					<label for="usr">* Password Check : </label> 
-					<input type="password" id="pwChk" placeholder="Input Password One More Time">
+					<label for="usr">* Password Check :&ensp; </label> 
+					<input type="password" id="pwChk" placeholder="Input Password One More Time" size="45">
 					<div><span id='pwChkSpan'></span></div>
 				</div>				
 				<!-- Address Input -->
@@ -49,17 +49,17 @@
 					<!-- 검색 기능을 표시할 <div>를 생성한다 -->
 					<div id="postcodify"></div>
 					<!-- 주소와 우편번호를 입력할 <input>들을 생성하고 name과 id를 부여한다 -->
-					<div>&nbsp; Post Number : 
-						<input type="text" id="postcode" value="" readonly size="10"/>
+					<div style="padding-bottom: 5px">&nbsp; Post Number : &ensp;&nbsp;
+						<input type="text" id="postcode" value="" readonly size="10" placeholder="Postcode"/>
 					</div>
-					<div>&nbsp; address : 
-						<input type="text" id="addr" value="" readonly size="50"/>
+					<div style="padding-bottom: 5px">&nbsp; address : &emsp;&emsp;&emsp;&nbsp;
+						<input type="text" id="addr" value="" readonly size="50" placeholder="Default Address"/>
 					</div>
-					<div>&nbsp; Detail Address :  
-						<input type="text"  id="details" value="" size="75"/>
+					<div style="padding-bottom: 5px">&nbsp; Detail Address : &nbsp;
+						<input type="text"  id="details" value="" size="75" placeholder="Detailed Address"/>
 					</div>
-					<div>&nbsp; Extra Info : 
-						<input type="text" id="extra_info" value="" readonly size="75"/>
+					<div style="padding-bottom: 5px">&nbsp; Extra Info : &ensp;&emsp;&emsp;
+						<input type="text" id="extra_info" value="" readonly size="75" placeholder="Extra Infomaion"/>
 					</div>
 					<!-- postcode + addr + details -->
 					<input type='hidden' name='address' value=''>
@@ -79,10 +79,22 @@
 					
 					<input type='hidden' name= 'phoneNumber' value=''>
 				</div>
+				<div class="form-group">
+					<label for="usr">E-Mail : </label> 
+					<input type="text" name='email' id='email' size='30' placeholder="example@mail.com">
+					<button name='emailAuthBtn'>Authentication Number Send</button>
+				</div>				
+				<div class="form-group authNum">
+					<label for="usr">Authentication Number : </label> 
+					<input type="text" name='emailChk' size='30' placeholder="Input Authentication Number">
+					<button name='emailAuthChkBtn'>Authentication Number Check</button>
+				</div>
+				<div><span id="emailAuthChk"></span></div>
 				<button type='submit' class='btn btn-primary submit'>Submit</button>
 				<button type='button' class='btn btn-danger cancel' onclick='location.href="/";'>Cancel</button>
 				<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
 			</form>
+			<div><span id='msg'></span></div>
 		</div>
 
 		<div class="progress">
@@ -96,8 +108,10 @@
 	<!-- 위에서 생성한 <div>에 검색 기능을 표시하고, 결과를 입력할 <input>들과 연동한다 -->
 <script>
 	$(function() {
-			
 		
+			var formObj = $("form[role='form']");
+			$('.authNum').hide();
+			
 			//Validation variables
 			var nameRegExp = /^[A-Za-z0-9]{4,14}$/;
 			var idRegExp = /^[A-Za-z0-9]{6,12}$/;
@@ -105,9 +119,38 @@
 			var nameChk = false;
 			var idChk = false;
 			var pwChk = false;
+			var emailChk = false;
+			
+			//email auth code
+			var code ="";
 			
 			
-			var formObj = $("form[role='form']");
+			//email btn onclick			
+			$('button[name="emailAuthBtn"]').on('click',function(e){
+				var email = $('#email').val();
+				e.preventDefault();
+				$.ajax({
+					type : 'get',
+					url : '/member/emailChk?email='+ email,
+					success:function(data){
+						$('.authNum').show();
+						code = data;
+						
+					}
+				
+				})
+			})
+			$('button[name="emailAuthChkBtn"]').on('click',function(e){
+				e.preventDefault();
+				var inputNum = $('input[name="emailChk"]').val();
+				if(inputNum == code){
+					$('#emailAuthChk').html('<p style="color : green"><i class="fa fa-check" aria-hidden="true">correspond to Auth Code ! </i></p>')
+					emailChk = true;
+				}else{
+					$('#emailAuthChk').html('<p style="color : red"><i class="fa fa-ban	" aria-hidden="true">Not correspond to Auth Code ! </i></p>')
+					emailChk = false;
+				}
+			})
 			
 			//#########RegExp Check#############
 			//name RegExp check
@@ -165,14 +208,17 @@
 				//when 
 				if(!nameChk){					
 					$('#userName').select();
+					$('#msg').html('<p style="color : red;"><i class="fa fa-ban" aria-hidden="true">Name Condition Not Met </i></p>')
 					return;
 				}
 				if(!idChk){
 					$('#userID').select();
+					$('#msg').html('<p style="color : red;"><i class="fa fa-ban" aria-hidden="true">ID Condition Not Met </i></p>')
 					return;
 				}
 				if(!pwChk){
 					$('#userpw').select();
+					$('#msg').html('<p style="color : red;"><i class="fa fa-ban" aria-hidden="true">Password Condition Not Met </i></p>')
 					return;
 				}
 				

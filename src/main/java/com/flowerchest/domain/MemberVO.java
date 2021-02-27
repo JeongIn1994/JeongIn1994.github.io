@@ -13,6 +13,7 @@ public class MemberVO {
 	private String userName;
 	private String address;
 	private String phoneNumber;	
+	private String email;
 	private boolean enable;
 	
 	private Date regDate;

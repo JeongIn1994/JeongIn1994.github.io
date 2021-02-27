@@ -21,16 +21,4 @@ public class CommonController {
 		
 	}
 
-	//login page
-	@GetMapping("/Logins")
-	public void loginInput(String error,String logout,Model model) {
-		
-		if(error != null) {
-			model.addAttribute("error",true);
-		}
-		if(logout != null) {
-			
-			model.addAttribute("logout",true);
-		}
-	}
 }
