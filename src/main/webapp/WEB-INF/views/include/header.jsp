@@ -58,7 +58,7 @@ body {
 </style>
 </head>
 <body>
-
+	<sec:authentication property="principal" var="pinfo" />
 	<div class="jumbotron text-center" style="margin-bottom: 0;width: 100%">
 		<h1>Flower Chest</h1>
 		<p>Resize this responsive page to see the effect!</p>

@@ -13,6 +13,7 @@
  		<result property="userName" column="username"/>
  		<result property="address" column="address"/>
  		<result property="phoneNumber" column="phonenumber"/>
+ 		<result property="email" column="email"/>
  		<result property="regDate" column="regdate"/>
  		<result property="updateDate" column="updateDate"/>
  		<collection property="authList" resultMap="authMap"></collection>
@@ -36,8 +37,8 @@
  	
  	<insert id="insert">
  		Insert Into 
- 			tbl_member(userid, userpw, username,address, phonenumber)
- 		Values(#{userid},#{userpw},#{userName},#{address},#{phoneNumber})
+ 			tbl_member(userid, userpw, username,address, phonenumber,email)
+ 		Values(#{userid},#{userpw},#{userName},#{address},#{phoneNumber},#{email})
  	</insert>
  	
  	

@@ -44,7 +44,6 @@
 	<div class="col-lg-12" style="border: 1px solid gray ;padding: 10px; border-radius: 5px;height: 900px;" >
 		<div class="panel panel-default">
 			<div class="panel-heading" style="border-bottom:1px solid gray;padding-bottom: 5px"><h4>Board Register</h4></div>
-			
 			<!-- panel body start -->
 			<div class="panel-body" style="padding: 5px"></div>
 				<form role="form" action="/board/register" method="post">
@@ -62,11 +61,19 @@
   					<hr>
 				 <div class="row">
 					<div class="form-group col-sm-8">
-						<label>Title</label><input class="form-control" name="title" required>					
+						<label>Title</label><input class="form-control" name="title" required>			
 					</div>
 					
 					<div class="form-group col-sm-4">
-						<label>Writer</label><input class="form-control" name="writer">				
+						<label>Writer</label>
+						<c:choose>
+							<c:when test="${pinfo eq 'anonymousUser' }">
+								<input class="form-control" name="writer">
+							</c:when>
+							<c:when test="${pinfo ne 'anonymousUser' }">
+								<input class="form-control" name="writer" value='${pinfo.username }' readonly>
+							</c:when>				
+						</c:choose>
 					</div>
 				</div>	
 					<div class="form-group">

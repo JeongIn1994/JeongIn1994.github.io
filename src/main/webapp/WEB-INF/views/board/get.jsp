@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Read Page</title>
+<title>read page</title>
 </head>
 <style>
 	.uploadResult{
@@ -34,7 +34,6 @@
 			
 			<!-- panel body start -->
 			<div class="panel-body" style="padding-top: 5px"></div>
-				<form role="form" action="/board/register" method="post">
 					<div style="border-bottom: 1px solid rgb(128, 128, 128); margin-bottom: 5px;padding-bottom: 5px;font-size:small;"><c:out value="${board.writer }"/></div>	
 						
 					<div style="text-align: right;font-size: small;" class="urlAddress">
@@ -43,9 +42,7 @@
 					
 					<div class="form-group">
 						<c:out value="${board.content }" escapeXml = "false"/>	<!-- Wrap Line -->
-					</div>	
-												
-				</form>
+					</div>
 					
 				<!-- form end -->
 					
@@ -89,16 +86,29 @@
 	  <i class="fa fa-commenting-o" aria-hidden="true"></i>New Reply
 	</div>
 	<div style="border-bottom: 1px dashed rgb(128, 128, 128);">
-	
 			<div class="form-group" id="replyForm">			
 				<div class ="row" style="padding-bottom: 5px" >
 					<div class="col-4">
   						<label>Name:</label>
-  						<input type="text" class="form-control" name= "replyer">
+						<c:choose>
+							<c:when test="${pinfo eq 'anonymousUser' }">
+								<input class="form-control" name="replyer">
+							</c:when>
+							<c:when test="${pinfo ne 'anonymousUser' }">
+								<input class="form-control" name="replyer" value='${pinfo.username }' readonly>
+							</c:when>				
+						</c:choose>
   					</div>
   					<div class="col-4">
-  						<label>Password:</label>
-  						<input type="password" class="form-control" name="password">
+  					<c:choose>
+  						<c:when test="${pinfo eq 'anonymousUser' }">
+  							<label>Password:</label>
+  							<input type="password" class="form-control" name="password">
+  						</c:when>
+  						<c:when test="${pinfo ne 'anonymousUser' }">
+  							<input type="hidden" class="form-control" name="password" value="${pinfo.password }">
+  						</c:when>
+  					</c:choose>
   					</div>
   				</div>
   				
@@ -117,7 +127,11 @@
 	
 	<!-- Bottom buttons -->		
 	<div style="margin: 5px">
-		<button type="button" data-oper='modify' class="btn btn-info" >Modify</button>	
+	<sec:authorize access="isAuthenticated()">
+		<c:if test="${pinfo.username eq board.writer }">
+		<button type="button" data-oper='modify' class="btn btn-info" >Modify</button>
+		</c:if>
+	</sec:authorize>	
 		<button type="button" data-oper='list' class="btn btn-success">Back</button>
 			<form id="operForm" action="/board/modify" method="get">
 				<input type="hidden" id="bno" name="bno" value='<c:out value="${board.bno }"/>'>
@@ -132,19 +146,37 @@
 </div>
 <script type="text/javascript" src = "/resources/js/reply.js"></script>
 <script type="text/javascript">
+document.title = 'Read Post - <c:out value="${board.title  }" />';
+
 //---------------------------Display Original Image------------------------------------
 function showImage(fileCallPath){
 	alert(fileCallPath);
 }
 //---------------------------reply delete--------------------------
 
-function deleteReply(rno){
-
-	if(confirm('Delete This Reply ?')==true){
-		replyService.remove(rno,function(result){
-			alert(result);
-			showList(pageNum);
-		})
+function deleteReply(tag){
+	var username = null;
+	
+	//when user was logined
+	<sec:authorize access ="isAuthenticated()">
+	 username = "<c:out value='${pinfo.username}'/>";
+	</sec:authorize>
+	
+	var replier = $(tag).data("replier");
+	var rno = $(tag).data("rno");
+	// 관리자 권한으로도 삭제가능하게끔 추가할것
+	if(replier == username)
+	{
+		if(confirm('Delete This Reply ?')==true)
+		{
+			replyService.remove(rno,function(result)
+					{
+				alert(result);
+				showList(pageNum);
+			})
+		}
+	}else{
+		alert('Only those who left comments can delete them!')
 	}
 }
 //---------------------------reply delete end-----------------------
@@ -175,10 +207,11 @@ function deleteReply(rno){
 			}
 			
 			for(var i =0, len = list.length||0;i<len;i++){
+				
 				str +="<li class= 'list-group-item' data-rno='"+list[i].rno+"' > ";
 				str +="<div><div class='header'><strong>"+list[i].replyer+"</strong>";			
-				str +="<small>"+replyService.displayTime(list[i].replyDate)+"</small>";
-				str +="<i class='fa fa-ban' aria-hidden='true' onclick='deleteReply("+list[i].rno+")'></i></div>";
+				str +="<small>"+replyService.displayTime(list[i].replyDate)+"</small>&nbsp;";
+				str +="<i class='fa fa-ban' aria-hidden='true' data-rno='"+list[i].rno+"' data-replier='"+list[i].replyer+"' onclick='deleteReply(this)'></i></div>";
 				str +="<p>"+list[i].reply+"</p></div></li>"
 			}
 			replyUL.html(str);
@@ -187,7 +220,7 @@ function deleteReply(rno){
 		});
 		
 	}//ShowList End
-
+	//------------------------Reply List End----------------------------
 	//---------------------------reply paging--------------------------
 		var pageNum = 1;
 		var replyPageFooter = $(".panel-footer");
@@ -241,7 +274,7 @@ $(document).ready(function(){
 	//-----------url Address End ---------------------
 	
 
-	//------------------------Reply List End----------------------------
+
 		var operForm = $("#operForm");
 		
 		$("button[data-oper='modify']").on("click",function(){
@@ -259,7 +292,14 @@ $(document).ready(function(){
 		var replyer = replyForm.find("input[name=replyer]");
 		var password = replyForm.find("input[name=password]");
 		var content = replyForm.find("textarea[name=content]")
+	
 		
+		var csrfHeaderName = "${_csrf.headerName}";
+		var csrfTokenValue="${_csrf.token}";
+		
+		$(document).ajaxSend(function(e,xhr,options){
+			xhr.setRequestHeader(csrfHeaderName,csrfTokenValue);
+		});
 		$("button[data-oper='registBtn']").on("click",function(){
 			
 			var reply={
@@ -272,8 +312,6 @@ $(document).ready(function(){
 				
 				alert(result);
 				content.val("");
-				replyer.val("");
-				password.val("");
 				showList(-1);
 			})
 			
@@ -298,8 +336,7 @@ $(document).ready(function(){
 		var bno = '<c:out value ="${board.bno}"/>';
 		
 		$.getJSON("/board/getAttachList",{bno:bno},function(arr){
-			console.log(arr);
-			
+		
 			var str = "";
 			if(arr.length <= 0){
 				str += "<span style='text-align:center;padding:30px;' ><i class='fa fa-files-o' aria-hidden='true'></i>Not Exsist Attach Files In this post</span>";

@@ -4,7 +4,6 @@ var replyService = (function(){
 	
 	//regist reply
 	function add(reply,callback,error){
-		
 		console.log("add reply..");
 		
 		$.ajax({
