@@ -44,6 +44,7 @@
 			<!-- panel body start -->
 			<div class="panel-body" style="padding: 5px"></div>
 				<form role="form" action="/board/modify" method="post">
+					<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
 					<input type="hidden" name="pageNum" value='<c:out value="${cri.pageNum }"/>'>
 					<input type="hidden" name="amount" value='<c:out value="${cri.amount }"/>'>
   					<input type="hidden" name='type' value='<c:out value="${cri.type }"/>'/>

@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,6 +75,7 @@ public class BoardController {
 	}
 	
 	//modify post
+	@PreAuthorize("principal.username == #board.writer")
 	@PostMapping("/modify")
 	public String modify(BoardVO board,RedirectAttributes rttr,@ModelAttribute("cri")Criteria cri) {
 		
@@ -88,6 +90,7 @@ public class BoardController {
 	}
 	
 	//delete post
+	@PreAuthorize("principal.username == #writer")
 	@PostMapping("/remove")
 	public String remove(@RequestParam("bno")Long bno,RedirectAttributes rttr,@ModelAttribute("cri")Criteria cri) {
 		log.info("====Delete Board====");

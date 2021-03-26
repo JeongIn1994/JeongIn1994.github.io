@@ -6,8 +6,8 @@
  
  	<!-- create  -->
  	<insert id="insert">
- 		insert into tbl_reply(rno,bno,reply,replyer,password) 
- 		values(seq_reply.nextval,#{bno},#{reply},#{replyer},#{password})	
+ 		insert into tbl_reply(rno,bno,reply,replyer) 
+ 		values(seq_reply.nextval,#{bno},#{reply},#{replyer})	
  	</insert>	
  	
  	<!-- Read -->

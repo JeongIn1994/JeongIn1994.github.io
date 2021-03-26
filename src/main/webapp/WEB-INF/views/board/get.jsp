@@ -59,7 +59,7 @@
 		<br>
 		<!--  reply List Start -->
 		<!-- panel heading start -->
-		<div class ="panel panel-default" style="border-bottom: 1px dashed rgb(128, 128, 128);margin-bottom: 15px">
+		<div class ="panel panel-default" style="border-bottom: 1px dashed rgb(128, 128, 128);margin-bottom: 15px;">
 			<div class = "panel-heading" style="border-bottom: 1px solid black;border-top: 1px solid black;padding: 5px ">
 				<i class="fa fa-comment" aria-hidden="true"></i>Replies&nbsp;<b>[<c:out value="${board.replyCnt }" />]</b>
 			</div>
@@ -86,32 +86,15 @@
 	  <i class="fa fa-commenting-o" aria-hidden="true"></i>New Reply
 	</div>
 	<div style="border-bottom: 1px dashed rgb(128, 128, 128);">
+		<c:choose>
+		<c:when test="${pinfo ne 'anonymousUser' }">
 			<div class="form-group" id="replyForm">			
 				<div class ="row" style="padding-bottom: 5px" >
 					<div class="col-4">
   						<label>Name:</label>
-						<c:choose>
-							<c:when test="${pinfo eq 'anonymousUser' }">
-								<input class="form-control" name="replyer">
-							</c:when>
-							<c:when test="${pinfo ne 'anonymousUser' }">
-								<input class="form-control" name="replyer" value='${pinfo.username }' readonly>
-							</c:when>				
-						</c:choose>
+						<input class="form-control" name="replyer" value='${pinfo.username }' readonly>
   					</div>
-  					<div class="col-4">
-  					<c:choose>
-  						<c:when test="${pinfo eq 'anonymousUser' }">
-  							<label>Password:</label>
-  							<input type="password" class="form-control" name="password">
-  						</c:when>
-  						<c:when test="${pinfo ne 'anonymousUser' }">
-  							<input type="hidden" class="form-control" name="password" value="${pinfo.password }">
-  						</c:when>
-  					</c:choose>
-  					</div>
-  				</div>
-  				
+  				</div>								
   				<div class = "row">
   					<div class="col-6">
   						<textarea class="form-control" rows="1" name="content" placeholder="input Comment"></textarea>
@@ -121,7 +104,13 @@
   					</div>	
   				</div>
 			</div>
-
+		</c:when>
+		<c:when test="${pinfo eq 'anonymousUser' }">
+			<div style="margin : 30px">
+				<i class="fa fa-sign-in" aria-hidden="true"></i> if you will be writed comment,must be logined!
+			</div>		
+		</c:when>
+		</c:choose>
 		</div>
 	</div>
 	

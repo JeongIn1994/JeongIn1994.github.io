@@ -14,9 +14,9 @@
 		
 		<security:access-denied-handler ref="customAccessDenied"/>
 		
-		<security:form-login login-page="/Logins" />
+		<security:form-login login-page="/Logins/login" />
 		
-		<security:logout invalidate-session="true" logout-url="/Logout" delete-cookies="remember-me,JSESSION_ID"/>
+		<security:logout invalidate-session="true" logout-url="/Logins/Logout" delete-cookies="remember-me,JSESSION_ID"/>
 		
 		<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 	

@@ -28,12 +28,15 @@
 	height: 200px;
 	background: #aaa;
 }
-
+.login,logout {
+	padding-left: 30px;
+	padding-right: 30px;
+}
 .navbar-nav li {
 	padding-top: 5px;
 	padding-bottom: 5px;
+	
 }
-
 body {
 	background-color: rgba(245, 245, 220, .5);
 	width: 100%;
@@ -51,34 +54,55 @@ body {
 	font-size: 55px;
 	color: red;
 }
-.loginPanel{
-	text-align: center;
-	padding: 5px;
-}
 </style>
 </head>
 <body>
+
 	<sec:authentication property="principal" var="pinfo" />
 	<div class="jumbotron text-center" style="margin-bottom: 0;width: 100%">
 		<h1>Flower Chest</h1>
 		<p>Resize this responsive page to see the effect!</p>
 	</div>
 
-	<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top" style="width: 100%">
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="width: 100%">
 		<a class="navbar-brand" href="/">Flower Chest</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			data-target="#collapsibleNavbar">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
-			<ul class="navbar-nav">
+			<ul class="navbar-nav mr-auto">
 				<li class="nav-item"><a class="nav-link" href="#"
 					onclick="location.href='/board/list'">Board</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-
-
+				<li class="nav-item"><a class="nav-link" href="#"
+					onclick="location.href='/products/list'">Product</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">MyPages</a></li>					
 			</ul>
-		</div>
+				<sec:authorize access="isAuthenticated()">
+					<form role="form" method="post" action="/Logins/Logout" class="form-inline my-2 my-lg-0" style="margin-right: 5px;">
+						<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
+						<span style="color: white;margin-right: 5px;">Welcome ! <c:out value="${pinfo.username }" /></span>
+						<button class="mypage btn btn-primary"style="color: white;margin-right: 5px;"><i class="fa fa-id-badge" aria-hidden="true"></i>MyPage</button>
+						<button class="logout btn btn-info"style="color: white;margin-right: 5px;"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</button>
+					</form>
+				</sec:authorize>
+				<sec:authorize access="isAnonymous()">
+					<form role="form" method="get" action="/Logins/login" class="form-inline my-2 my-lg-0" >
+						<button class="login btn btn-info"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</button>	
+					</form>
+				</sec:authorize>
 
+		</div>
+		
 	</nav>
+	<script>
+		$(".mypage").on("click",function(e){
+			
+			var form = $("form[role='form']");
+			e.preventDefault();
+			<sec:authorize access="isAuthenticated()">
+				form.attr("action","/Mypage/<c:out value='${pinfo.username}' />");
+			</sec:authorize>
+			form.submit();
+		})
+	</script>
+</body>

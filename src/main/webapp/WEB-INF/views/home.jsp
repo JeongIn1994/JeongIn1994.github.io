@@ -3,7 +3,7 @@
 <body>
 	<div class="row" style="width: 100%;">
 		<!-- slide part -->
-		<div id="demo" class="carousel slide col-9" data-ride="carousel">
+		<div id="demo" class="carousel slide col" data-ride="carousel">
 			<!-- Indicators -->
 			<ul class="carousel-indicators">
 				<li data-target="#demo" data-slide-to="0" class="active"></li>
@@ -28,57 +28,6 @@
 			</a> <a class="carousel-control-next" href="#demo" data-slide="next">
 				<span class="carousel-control-next-icon" aria-hidden="true"></span>
 			</a>
-		</div>
-		<!-- login console part -->
-		<div class="col-3" style="background-color: gray;">
-			<div class="LoginPanel-heading" style="border-bottom: 1px solid black">
-				<form role="form" action="/Logins" method="post">
-
-					<sec:authentication property="principal" var="pinfo" />
-					<c:choose>
-						<c:when test="${pinfo ne 'anonymousUser' }">
-							<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
-							<div class='loginPanel'>
-								<h3>Welcome, <c:out value="${pinfo.username }"/> !</h3>
-							</div>
-							<div class='row' style="padding: 5px">
-								<div class='col-sm-6'>
-									<a href='#' style="color: teal;"><i class="fa fa-info"
-										aria-hidden="true"></i> User Page </a>
-								</div>
-								<div class='col-sm-6' style="text-align: right;">
-									<a href='#' id='logout' style="color: navy;"><i class="fa fa-sign-out"
-										aria-hidden="true"></i> Logaout</a>
-								</div>
-							</div>
-							
-						</c:when>
-						<c:when test="${pinfo eq 'anonymousUser' }">
-							<div class='loginPanel'>
-								<h3>Account Login</h3>
-								<button type="button" class="login btn btn-info btn-block">
-									<i class="fa fa-sign-in" aria-hidden="true"></i> Login
-								</button>
-							</div>
-							<div class='row' style="padding: 5px">
-								<div class='col-sm-6'>
-									<a href='#' style="color: teal;"><i class="fa fa-refresh"
-										aria-hidden="true"></i> Forget ID/PW</a>
-								</div>
-								<div class='col-sm-6' style="text-align: right;">
-									<a href='/member/conditionsOfUse' style="color: navy;"><i class="fa fa-plus"
-										aria-hidden="true"></i> Create New Account</a>
-								</div>
-							</div>
-						</c:when>
-					</c:choose>
-				</form>
-				<!-- loginpanel heading end -->
-			</div>
-			<!-- login colsole end -->
-			<div>
-				Icons List
-			</div>
 		</div>
 	</div>
 	<div class="container" style="margin-top: 30px">
@@ -124,27 +73,5 @@
 	</div>
 </body>
 <%@include file="include/footer.jsp"%>
-<script>
-	$(document).ready(function(e) {
-
-		var form = $('form[role="form"]');
-
-		$(".login").on('click', function(e) {
-			e.preventDefault();
-			form.attr('method', 'get');
-			form.attr('action', '/Logins/');
-			form.submit();
-		});
-		
-		$('#logout').on('click',function(e){
-			
-			
-			$('form[role="form"]').attr('action','/Logout');
-			
-			$('form[role="form"]').submit();
-			
-		})
-	});
-</script>
 </body>
 </html>
