@@ -11,7 +11,9 @@ public interface ProductMapper {
 	
 	public List<ProductVO> getList();
 	
-	public List<ProductVO> getListWithPaging(Criteria cri,String category);
+	public List<ProductVO> getListWithPaging(Criteria cri);
+	
+	public List<ProductVO> getListWithPagingAndCategory(Criteria cri,String category);
 	
 	public void insert(ProductVO product);
 	

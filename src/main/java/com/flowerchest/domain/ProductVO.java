@@ -14,9 +14,11 @@ public class ProductVO {
 	private String manufacturer;
 	private String country;
 	private Date regdate;
-	private int psize;
-	private int weight;
-	private int strck;
+	private Long psize;
+	private Long weight;
+	private Long strck;
 
+	private ProductAttachVO attachImage;
+	
 	
 }

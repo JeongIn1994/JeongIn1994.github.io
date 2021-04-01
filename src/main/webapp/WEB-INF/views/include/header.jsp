@@ -74,8 +74,10 @@ body {
 				<li class="nav-item"><a class="nav-link" href="#"
 					onclick="location.href='/board/list'">Board</a></li>
 				<li class="nav-item"><a class="nav-link" href="#"
-					onclick="location.href='/products/list'">Product</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">MyPages</a></li>					
+					onclick="location.href='/products/list?category=all'">Product</a></li>
+				<sec:authorize access="isAuthenticated()">	
+				<li class="nav-item"><a class="nav-link" href="#">MyPages</a></li>		
+				</sec:authorize>			
 			</ul>
 				<sec:authorize access="isAuthenticated()">
 					<form role="form" method="post" action="/Logins/Logout" class="form-inline my-2 my-lg-0" style="margin-right: 5px;">

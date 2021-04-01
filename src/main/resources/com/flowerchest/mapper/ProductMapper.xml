@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.flowerchest.mapper.ProductMapper">
+ 	<!-- sql repository -->
+<!--  	<sql id="criteria"> -->
+<!--  		<trim prefix="(" suffix=") AND" prefixOverrides="OR"> -->
+<!--  			<foreach collection="typeArr" item="type"> -->
+<!--  				<trim prefix="OR"> -->
+<!--  					<choose> -->
+<!--  						<when test="type =='T'.toString()"> -->
+<!--  							title like '%'||#{keyword}||'%' -->
+<!--  						</when> -->
+<!--  						<when test="type =='C'.toString()"> -->
+<!--  							content like '%'||#{keyword}||'%' -->
+<!--  						</when> 						 -->
+<!--  						<when test="type =='W'.toString()"> -->
+<!--  							writer like '%'||#{keyword}||'%' -->
+<!--  						</when> 						 -->
+<!--  					</choose> -->
+<!--  				</trim> -->
+<!--  			</foreach> -->
+<!--  		</trim> -->
+<!--  	</sql> -->
+ 	
+ 	<!-- List Paging -->
+<!--  	<select id="getListWithPaging" resultType="com.flowerchest.domain.ProductVO"> -->
+<!--  		<![CDATA[  -->
+<!--  		select bno,title,content,writer,regdate,updatedate,category,replycnt from  -->
+<!--  			(select /*+INDEX_DESC(tbl_Product pk_Product)*/ rownum rn,bno,title,content,writer,regdate,updatedate,category,replycnt -->
+<!--  			from -->
+<!--  			 tbl_Product -->
+<!--  			where ]]> -->
+<!--  			 <include refid="criteria"></include> -->
+<!--  			<![CDATA[ -->
+<!--  			 rownum <= #{pageNum} * #{amount} -->
+<!--  			) -->
+<!--  		where rn > (#{pageNum}-1) * #{amount}  -->
+<!--  		]]> -->
+ 	
+<!--  	</select> -->
+ 	
+ 	<!-- Get List -->
+<!--  	<select id="getList" resultType="com.flowerchest.domain.ProductVO"> -->
+<!--  		<![CDATA[select * from tbl_Product where category=#{category} And bno >0 ]]> -->
+<!--  	</select> -->
+ 	
+ 	<!-- Get Post -->
+<!--  	<select id="read" resultType="com.flowerchest.domain.ProductVO"> -->
+<!--  		select * from tbl_Product where bno = #{bno} -->
+<!--  	</select> -->
+ 	
+ 	<!-- Post Insert -->
+ 	<insert id="insert">
+ 		insert into tbl_product(pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock) 
+ 		values (SEQ_PRODUCT.nextval,#{pname},#{pexplain},#{price},#{category},#{manufacturer},sysdate,#{psize},#{weight},#{stock});
+ 	</insert>
+ 	
+ 	<!-- Using With Primary key When Post Insert-->
+ 	<insert id="insertSelectKey">
+ 		<selectKey keyProperty="pid" order="BEFORE" resultType="long">
+ 			select seq_product.nextval from dual
+ 		</selectKey>
+ 		insert into tbl_product(pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock) 
+ 		values (#{pid},#{pname},#{pexplain},#{price},#{category},#{manufacturer},sysdate,#{psize},#{weight},#{stock});
+ 	</insert>
+ 	
+ 	<!--  delete Post -->
+<!--  	<delete id="delete"> -->
+<!--  		delete from tbl_Product where bno = #{bno}  -->
+<!--  	</delete> -->
+ 	<!--  Update Post -->
+<!--  	<update id="update"> -->
+<!--  		update tbl_Product -->
+<!--  		set title=#{title}, -->
+<!--  		content = #{content}, -->
+<!--  		writer = #{writer}, -->
+<!--  		updateDate = sysdate, -->
+<!--  		category = #{category} -->
+<!--  		where bno = #{bno}	 -->
+<!--  	</update> -->
+ 	<!-- Get Post Count -->
+<!--  	<select id="getTotalCount" resultType="int"> -->
+<!--  		select count(*) from tbl_Product where -->
+<!--  		<include refid="criteria"></include> -->
+<!--  		 bno > 0  -->
+<!--  	</select> -->
+ 	<!-- Update Reply Count -->
+<!--  	<update id="updateReplyCnt"> -->
+<!--  		update tbl_Product set replycnt = replycnt + #{amount} where bno = #{bno} -->
+<!--  	</update> -->
+ </mapper>

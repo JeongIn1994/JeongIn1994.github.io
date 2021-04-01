@@ -2,26 +2,26 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.flowerchest.mapper.BoardAttachMapper">
+ <mapper namespace="com.flowerchest.mapper.ProductAttachMapper">
  	
  	<insert id="insert">
- 		insert into tbl_attach (uuid,uploadpath,filename,bno)
- 		values (#{uuid},#{uploadPath},#{fileName},#{bno})
+ 		insert into tbl_attach (uuid,uploadpath,filename,pid)
+ 		values (#{uuid},#{uploadPath},#{fileName},#{pid})
  	</insert>
  
  	<delete id="delete">
  		delete from tbl_attach where uuid = #{uuid}
  	</delete>
  	
- 	<select id="findByBno" resultType="com.flowerchest.domain.BoardAttachVO">
- 		select * from tbl_attach where bno = #{bno}
+ 	<select id="findByBno" resultType="com.flowerchest.domain.ProductAttachVO">
+ 		select * from tbl_attach where pid = #{pid}
  	</select>
 
 	<delete id="deleteAll">
-		delete tbl_attach where bno = #{bno}
+		delete tbl_attach where pid = #{pid}
 	</delete>
 	
-	<select id="getOldFiles" resultType="com.flowerchest.domain.BoardAttachVO">
+	<select id="getOldFiles" resultType="com.flowerchest.domain.ProductAttachVO">
 		select * from tbl_attach where uploadpath = to_char(sysdate -1,'yyyy\mm\dd')
 	</select>
  </mapper>

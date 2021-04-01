@@ -16,6 +16,7 @@ public class Criteria {
 	
 	private String type;
 	private String keyword;
+	private String category;
 	
 	public Criteria() {
 		this(1,10);
@@ -36,6 +37,7 @@ public class Criteria {
 				.queryParam("pageNum", this.getPageNum())
 				.queryParam("amount", this.getAmount())
 				.queryParam("type", this.getType())
+				.queryParam("category", this.getCategory())
 				.queryParam("keyword", this.getKeyword());
 		
 		return builder.toUriString();
