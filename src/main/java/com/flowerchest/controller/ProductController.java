@@ -24,19 +24,23 @@ public class ProductController {
 	
 	//product list
 	@GetMapping("/list")
-	public void list(@RequestParam("category")String category,Model model,Criteria cri) {
+	public void list(@RequestParam("category") String category,Model model,Criteria cri) {
 		//when category was all, show all product
-		if(category == "all") {
-			
-			model.addAttribute("list",pservice.getList(cri) );
+		if(category.equals("all")) {
+			model.addAttribute("list",pservice.getList(cri));
+		
+			int total = pservice.getTotal(cri);
+		
+		
+			model.addAttribute("pageMaker", new PageDTO(cri,total));
+		}else {
+			model.addAttribute("list",pservice.getListWithCategory(cri, category));
 			
 			int total = pservice.getTotal(cri);
 			
-			model.addAttribute("pageMaker", new PageDTO(cri, total));
-		}else {
 			
+			model.addAttribute("pageMaker", new PageDTO(cri,total));
 		}
-		
 	}
 	
 	@GetMapping("/register")
@@ -54,7 +58,7 @@ public class ProductController {
 		
 		rttr.addAttribute("result",product.getPid());
 		
-		return "redirect:/products/list";
+		return "redirect:/products/list?category=all";
 	}
 	
 	

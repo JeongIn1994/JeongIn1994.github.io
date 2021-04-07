@@ -25,26 +25,40 @@
 <!--  	</sql> -->
  	
  	<!-- List Paging -->
-<!--  	<select id="getListWithPaging" resultType="com.flowerchest.domain.ProductVO"> -->
-<!--  		<![CDATA[  -->
-<!--  		select bno,title,content,writer,regdate,updatedate,category,replycnt from  -->
-<!--  			(select /*+INDEX_DESC(tbl_Product pk_Product)*/ rownum rn,bno,title,content,writer,regdate,updatedate,category,replycnt -->
-<!--  			from -->
-<!--  			 tbl_Product -->
-<!--  			where ]]> -->
+ 	<select id="getListWithPaging" resultType="com.flowerchest.domain.ProductVO">
+ 		<![CDATA[ 
+  		select pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock from 
+ 			(select /*+INDEX_DESC(tbl_Product pk_Product)*/ rownum rn,pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock 
+ 			 from
+			 tbl_Product 
+  			where ]]> 
 <!--  			 <include refid="criteria"></include> -->
-<!--  			<![CDATA[ -->
-<!--  			 rownum <= #{pageNum} * #{amount} -->
-<!--  			) -->
-<!--  		where rn > (#{pageNum}-1) * #{amount}  -->
-<!--  		]]> -->
+ 			<![CDATA[
+ 			 rownum <= #{pageNum} * #{amount}
+ 			) 
+ 		where rn > (#{pageNum}-1) * #{amount} 
+  		]]>
  	
-<!--  	</select> -->
+ 	</select>
+  	<select id="getListWithPagingAndCategory" resultType="com.flowerchest.domain.ProductVO">
+ 		<![CDATA[ 
+  		select pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock from 
+ 			(select /*+INDEX_DESC(tbl_Product pk_Product)*/ rownum rn,pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock 
+ 			 from
+			 tbl_Product 
+  			where ]]> 
+<!--  			 <include refid="criteria"></include> -->
+ 			<![CDATA[
+ 			 rownum <= #{pageNum} * #{amount}
+ 			) 
+ 		where rn > (#{pageNum}-1) * #{amount} And category = #{category}
+  		]]>
  	
+ 	</select>	
  	<!-- Get List -->
-<!--  	<select id="getList" resultType="com.flowerchest.domain.ProductVO"> -->
-<!--  		<![CDATA[select * from tbl_Product where category=#{category} And bno >0 ]]> -->
-<!--  	</select> -->
+ 	<select id="getList" resultType="com.flowerchest.domain.ProductVO">
+ 		<![CDATA[select * from tbl_Product where category=#{category} And pid >0 ]]>
+ 	</select>
  	
  	<!-- Get Post -->
 <!--  	<select id="read" resultType="com.flowerchest.domain.ProductVO"> -->
@@ -54,7 +68,7 @@
  	<!-- Post Insert -->
  	<insert id="insert">
  		insert into tbl_product(pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock) 
- 		values (SEQ_PRODUCT.nextval,#{pname},#{pexplain},#{price},#{category},#{manufacturer},sysdate,#{psize},#{weight},#{stock});
+ 		values (SEQ_PRODUCT.nextval,#{pname},#{pexplain},#{price},#{category},#{manufacturer},sysdate,#{psize},#{weight},#{stock})
  	</insert>
  	
  	<!-- Using With Primary key When Post Insert-->
@@ -62,8 +76,8 @@
  		<selectKey keyProperty="pid" order="BEFORE" resultType="long">
  			select seq_product.nextval from dual
  		</selectKey>
- 		insert into tbl_product(pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock) 
- 		values (#{pid},#{pname},#{pexplain},#{price},#{category},#{manufacturer},sysdate,#{psize},#{weight},#{stock});
+ 		insert into tbl_product(pid,pname,pexplain,price,category,manufacturer,country,regdate,psize,weight,stock) 
+ 		values (#{pid},#{pname},#{pexplain},#{price},#{category},#{manufacturer},#{country},sysdate,#{psize},#{weight},#{stock})
  	</insert>
  	
  	<!--  delete Post -->
@@ -81,11 +95,11 @@
 <!--  		where bno = #{bno}	 -->
 <!--  	</update> -->
  	<!-- Get Post Count -->
-<!--  	<select id="getTotalCount" resultType="int"> -->
-<!--  		select count(*) from tbl_Product where -->
+ 	<select id="getTotalCount" resultType="int">
+ 		select count(*) from tbl_product where
 <!--  		<include refid="criteria"></include> -->
-<!--  		 bno > 0  -->
-<!--  	</select> -->
+ 		 pid > 0 
+ 	</select>
  	<!-- Update Reply Count -->
 <!--  	<update id="updateReplyCnt"> -->
 <!--  		update tbl_Product set replycnt = replycnt + #{amount} where bno = #{bno} -->

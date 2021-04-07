@@ -29,19 +29,19 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<ProductVO> getList(Criteria cri) {
 		// TODO Auto-generated method stub
-		return null;
+		return pMapper.getListWithPaging(cri);
 	}
 
 	@Override
 	public List<ProductVO> getListWithCategory(Criteria cri, String category) {
 		// TODO Auto-generated method stub
-		return null;
+		return pMapper.getListWithPagingAndCategory(cri, category);
 	}
 
 	@Override
 	public int getTotal(Criteria cri) {
 		// TODO Auto-generated method stub
-		return 0;
+		return pMapper.getTotalCount(cri);
 	}
 
 	@Override

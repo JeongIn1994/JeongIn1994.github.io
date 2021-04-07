@@ -8,16 +8,17 @@ import lombok.Data;
 @Data
 public class ProductVO {
 	private Long pid;
+	private String category;
 	private String pname;
 	private String pexplain;
 	private Long price;
 	private String manufacturer;
 	private String country;
 	private Date regdate;
-	private Long psize;
+	private String psize;
 	private Long weight;
-	private Long strck;
-
+	private Long stock;
+	
 	private ProductAttachVO attachImage;
 	
 	

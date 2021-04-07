@@ -76,7 +76,8 @@ body {
 				<li class="nav-item"><a class="nav-link" href="#"
 					onclick="location.href='/products/list?category=all'">Product</a></li>
 				<sec:authorize access="isAuthenticated()">	
-				<li class="nav-item"><a class="nav-link" href="#">MyPages</a></li>		
+				<li class="nav-item"><a class="nav-link" href="#"
+					onclick="location.href='/member/${pinfo.username}'">MyPages</a></li>		
 				</sec:authorize>			
 			</ul>
 				<sec:authorize access="isAuthenticated()">
