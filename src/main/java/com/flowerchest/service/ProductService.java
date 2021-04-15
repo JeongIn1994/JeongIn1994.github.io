@@ -13,9 +13,11 @@ public interface ProductService {
 	
 	public List<ProductVO> getList(Criteria cri);
 	
-	public List<ProductVO> getListWithCategory(Criteria cri,String category);
+	public List<ProductVO> getListWithCategory(Criteria cri);
 
 	public void register(ProductVO product);
 	
 	public int getTotal(Criteria cri);
+	
+	public int getToalWithCategory(Criteria cri);
 }

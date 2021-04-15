@@ -13,7 +13,7 @@ public interface ProductMapper {
 	
 	public List<ProductVO> getListWithPaging(Criteria cri);
 	
-	public List<ProductVO> getListWithPagingAndCategory(Criteria cri,String category);
+	public List<ProductVO> getListWithPagingAndCategory(Criteria cri);
 	
 	public void insert(ProductVO product);
 	
@@ -26,6 +26,8 @@ public interface ProductMapper {
 	public int update(ProductVO board);
 	
 	public int getTotalCount(Criteria cri);
+	
+	public int getTotalCountWithCategory(Criteria cri);
 	
 	public void updateReplyCnt(@Param("pid")Long pid,@Param("amount")int amount);
 }

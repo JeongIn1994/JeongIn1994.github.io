@@ -33,9 +33,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductVO> getListWithCategory(Criteria cri, String category) {
+	public List<ProductVO> getListWithCategory(Criteria cri) {
 		// TODO Auto-generated method stub
-		return pMapper.getListWithPagingAndCategory(cri, category);
+		return pMapper.getListWithPagingAndCategory(cri);
 	}
 
 	@Override
@@ -43,7 +43,12 @@ public class ProductServiceImpl implements ProductService {
 		// TODO Auto-generated method stub
 		return pMapper.getTotalCount(cri);
 	}
-
+	
+	@Override
+	public int getToalWithCategory(Criteria cri) {
+		// TODO Auto-generated method stub
+		return pMapper.getTotalCountWithCategory(cri);
+	}
 	@Override
 	public void register(ProductVO product) {
 		// TODO Auto-generated method stub
@@ -51,6 +56,8 @@ public class ProductServiceImpl implements ProductService {
 		pMapper.insertSelectKey(product);
 				
 	}
+
+
 	
 	
 	

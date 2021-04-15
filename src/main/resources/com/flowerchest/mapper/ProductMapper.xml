@@ -51,9 +51,8 @@
  			<![CDATA[
  			 rownum <= #{pageNum} * #{amount}
  			) 
- 		where rn > (#{pageNum}-1) * #{amount} And category = #{category}
-  		]]>
- 	
+ 		where rn > (#{pageNum}-1) * #{amount} And category=#{category}
+  		]]>	
  	</select>	
  	<!-- Get List -->
  	<select id="getList" resultType="com.flowerchest.domain.ProductVO">
@@ -100,6 +99,11 @@
 <!--  		<include refid="criteria"></include> -->
  		 pid > 0 
  	</select>
+ 	<select id="getTotalCountWithCategory" resultType="int">
+ 		select count(*) from tbl_product where
+
+ 		 pid > 0 And category=#{category}
+ 	</select> 	
  	<!-- Update Reply Count -->
 <!--  	<update id="updateReplyCnt"> -->
 <!--  		update tbl_Product set replycnt = replycnt + #{amount} where bno = #{bno} -->

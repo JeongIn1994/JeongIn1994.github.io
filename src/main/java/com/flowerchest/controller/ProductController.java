@@ -27,19 +27,20 @@ public class ProductController {
 	public void list(@RequestParam("category") String category,Model model,Criteria cri) {
 		//when category was all, show all product
 		if(category.equals("all")) {
+			
 			model.addAttribute("list",pservice.getList(cri));
 		
 			int total = pservice.getTotal(cri);
-		
-		
+				
 			model.addAttribute("pageMaker", new PageDTO(cri,total));
-		}else {
-			model.addAttribute("list",pservice.getListWithCategory(cri, category));
+		}else{			
+			cri.setCategory(category);
 			
-			int total = pservice.getTotal(cri);
-			
-			
+			int total = pservice.getToalWithCategory(cri);
+						
 			model.addAttribute("pageMaker", new PageDTO(cri,total));
+			
+			model.addAttribute("list",pservice.getListWithCategory(cri));
 		}
 	}
 	
