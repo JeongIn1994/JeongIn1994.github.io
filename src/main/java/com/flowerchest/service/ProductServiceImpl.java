@@ -57,6 +57,12 @@ public class ProductServiceImpl implements ProductService {
 				
 	}
 
+	@Override
+	public ProductVO get(Long pid) {
+		
+		return pMapper.read(pid);
+	}
+
 
 	
 	

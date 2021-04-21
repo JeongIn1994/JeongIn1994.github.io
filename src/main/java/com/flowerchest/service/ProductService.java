@@ -20,4 +20,6 @@ public interface ProductService {
 	public int getTotal(Criteria cri);
 	
 	public int getToalWithCategory(Criteria cri);
+	
+	public ProductVO get(Long pid);
 }

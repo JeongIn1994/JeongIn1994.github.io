@@ -96,7 +96,7 @@
 			
 			actionForm.submit();
 		})
-		
+		//Register Button
 // 		$('.regBtn').on('click', function(e) {
 
 // 			self.location = "/products/register";
@@ -110,7 +110,17 @@
 			actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 			actionForm.submit();
 		})
-		//Paging End		
+		//Paging End	
+		
+		//Clicked Post Event
+		$(".move").on("click",function(e){
+			e.preventDefault();
+			$('#pid').remove();//case of without list button click,browser was cilcked back key or mouse back key And delete hidden tag.
+			actionForm.append("<input type='hidden' id ='pid' name='pid' value='"+$(this).attr("href")+"'>");
+			actionForm.attr("action","/products/get");
+			actionForm.submit();
+
+		});
 	</script>
 </body>
 </html>

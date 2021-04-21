@@ -19,7 +19,7 @@ public interface ProductMapper {
 	
 	public void insertSelectKey(ProductVO product);
 	
-	public ProductVO read(Long bno);
+	public ProductVO read(Long pid);
 	
 	public int delete(Long bno);
 	

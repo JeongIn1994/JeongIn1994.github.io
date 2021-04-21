@@ -3,6 +3,7 @@ package com.flowerchest.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,9 +65,11 @@ public class ProductController {
 	
 	
 	@GetMapping({"/modify","/get"})
-	public void get() {
+	public void get(@RequestParam("pid")Long pid,Model model,@ModelAttribute("cri")Criteria cri) {
 		
+		model.addAttribute("product",pservice.get(pid));
 	}
+	
 	
 
 }

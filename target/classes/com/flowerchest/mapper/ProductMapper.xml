@@ -60,9 +60,9 @@
  	</select>
  	
  	<!-- Get Post -->
-<!--  	<select id="read" resultType="com.flowerchest.domain.ProductVO"> -->
-<!--  		select * from tbl_Product where bno = #{bno} -->
-<!--  	</select> -->
+ 	<select id="read" resultType="com.flowerchest.domain.ProductVO">
+ 		select * from tbl_Product where pid = #{pid}
+ 	</select>
  	
  	<!-- Post Insert -->
  	<insert id="insert">
