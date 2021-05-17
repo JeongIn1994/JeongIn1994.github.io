@@ -28,10 +28,10 @@
 			<thead>
 				<tr>
 					<th>category</th>
-					<th>Title</th>
+					<th>Product Name</th>
 					<th>Writer</th>
 					<th>PostDate</th>
-					<th>UpdateDate</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -45,6 +45,9 @@
 				</c:forEach>
 			</tbody>
 		</table>
+	<sec:authorize access="isAuthenticated()">
+		<button class="regBtn btn btn-info">Regist</button>
+	</sec:authorize>		
 		<ul class="pagination justify-content-center" style="margin:20px 0">
 			<!-- if PageNumber is 1, Not showing -->
 			<c:if test="${pageMaker.prev }">
@@ -64,7 +67,7 @@
 		
 	</div>
 	<!-- 	<button class="regBtn btn btn-info">Regist</button> -->
-	
+
 	<form action="/products/list" method="get" id="actionForm">
 		<input type="hidden" name="category" value="${pageMaker.cri.category }">
 		<input type="hidden" name="amount" value="${pageMaker.cri.amount }">
@@ -97,11 +100,11 @@
 			actionForm.submit();
 		})
 		//Register Button
-// 		$('.regBtn').on('click', function(e) {
+		$('.regBtn').on('click', function(e) {
 
-// 			self.location = "/products/register";
-// 		})
-		//Paging Start
+			self.location = "/products/register";
+		})
+// 		Paging Start
 		var actionForm = $("#actionForm");
 		$(".pagination a").on("click",function(e){
 			e.preventDefault();

@@ -53,9 +53,9 @@ public class ProductController {
 	@PostMapping("/register")
 	public String postRegist(ProductVO product,RedirectAttributes rttr) {
 			
-		if(product.getAttachImage()==null) {
-			
-		}
+//		if(product.getAttachImage()==null) {
+//			
+//		}
 		pservice.register(product);
 		
 		rttr.addAttribute("result",product.getPid());

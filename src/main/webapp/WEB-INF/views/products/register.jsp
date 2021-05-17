@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Product Register</title>
 </head>
 <body>
 <%@include file="../include/header.jsp" %>
@@ -41,30 +41,40 @@
   					</div> 
   					<hr>
 				 <div class="row">
-					<div class="form-group col-sm-8">
+					<div class="form-group col-sm-4">
 						<label>Product Name</label><input class="form-control" name="pname" required>			
 					</div>
-					
-					<div class="form-group col-sm-4">
-						<label>Price</label>
-						<input type="number" class="form-control" name="price" min="0" step="1000">	
-												
+					<div class="form-group col-sm-4 uploadDiv">
+						<label>Thumbnail</label><input type="file" class="fileupload" multiple>
+					</div>
+					<div class="form-group col-sm-4 uploadResult">
+						 
 					</div>
 				</div>
 				<hr>
 				<span><h5>Product Details</h5></span>
 				 <div class="row">
-					<div class="form-group col-sm-6">
+					<div class="form-group col-sm-4">
+						<label>Price</label>
+						<input type="number" class="form-control" name="price" min="0" step="1000">													
+					</div>				 
+					<div class="form-group col-sm-4">
 						<label>Manufacturer</label><input class="form-control" name="manufacturer">			
 					</div>		
-					<div class="form-group col-sm-6">
+					<div class="form-group col-sm-4">
 						<label>Country</label>
 						<input class="form-control" name="country">												
 					</div>										
 				</div>
 				<div class="row">
-					<div class="form-group col-sm-4">
-						<label>Product Size</label><input class="form-control" name="psize">			
+					<div class="form-group col-sm-4">						
+						<label>Product Size</label>
+						<div class='row' style="margin-left: 35px;">
+							<input class="form-control pwidth col-sm-4" name="width" placeholder="cm">
+							&nbsp;<c:out value='X'/>&nbsp;		
+							<input class="form-control pheight col-sm-4" name="height" placeholder="cm">
+							<input type='hidden' class="psize col-sm-4e" name="psize">	
+						</div>
 					</div>
 					<div class="form-group col-sm-4">
 						<label>Stock</label>
@@ -88,22 +98,7 @@
                 			CKEDITOR.config.image_previewText = 'Image Thumbnail';
 
             			</script>					
-					</div>
-					
-					
-					<div style="border-bottom: 1px dashed gray; border-top: 1px dashed gray; margin-bottom: 10px; padding: 10px;">
-						<i class="fa fa-files-o" aria-hidden="true"></i>Attch Files
-						<div>
-							<input type="file" name="uploadFile" multiple>
-						</div>
-						
-						<div class ='uploadResult'>
-							<ul>
-							
-							</ul>
-						</div>
-					</div>	
-					
+					</div>					
 									
 					<button type="submit" class="btn btn-primary">Submit</button>
 					
@@ -118,6 +113,67 @@
 		<!-- panel default end -->
 	</div>
 	<hr>
+	<script>
+	$(document).ready(function(){
+		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+		var maxSize = 5242880;
+		//extension check
+		function checkExtension(fileName,fileSize){
+			
+			if(fileSize >= maxSize){
+				alert("FileSize Was So Bigger!")
+				return;
+			}
+			if(regex.test(fileName)){
+				alert("This Files Was Not Upload!")
+				return;
+			}
+			return true;
+		}
+		//thumbnail button click event
+		var cloneObj = $('.uploadDiv').clone();	
+		$('.fileupload').on('change',function(e){
+			
+			var formData = new FormData();
+			var inputFile = $('.fileupload');
+			var files = inputFile[0].files;
+			
+			//if uploadfiles more than 2files, first file was be Thumbnail
+			if(files.length>1){
+				alert("Thumbnail File Only 1 File! First File was be Thumbnail !");
+				files = files[0];
+				$('.uploadDiv').html(cloneObj.html());
+			}
+			if(!checkExtension(files.name, files.size)){
+					return false;
+			}
+			formData.append("fileupload",files);
+			
+			$.ajax({
+				url : '/uploadAjaxAction',
+				processData : false,
+				contentType : false,
+				data : formData,
+				type : 'POST',
+				dataType : 'json',
+				success : function(result){
+					console.log(result);
+					
+					
+				}
+				
+			})
+		})
+		//onclick submit button
+		$('button[type="submit"]').on('click',function(e){			
+			e.preventDefault();
+			//psize calculate input
+			var psize = $('.pwidth').val() + '*' + $('.pheight').val();
+			$('.psize').val(psize);
+
+		})
+	})	
+	</script>
 </div>
 </div>
 <%@include file="../include/footer.jsp" %>

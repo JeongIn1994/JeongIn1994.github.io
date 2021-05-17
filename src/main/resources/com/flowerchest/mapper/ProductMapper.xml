@@ -49,9 +49,9 @@
   			where ]]> 
 <!--  			 <include refid="criteria"></include> -->
  			<![CDATA[
- 			 rownum <= #{pageNum} * #{amount}
+ 			 rownum <= #{pageNum} * #{amount} And category=#{category}
  			) 
- 		where rn > (#{pageNum}-1) * #{amount} And category=#{category}
+ 		where rn > (#{pageNum}-1) * #{amount} 
   		]]>	
  	</select>	
  	<!-- Get List -->
