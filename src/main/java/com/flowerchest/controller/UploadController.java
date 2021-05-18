@@ -92,18 +92,18 @@ public class UploadController {
 	public void uploadAjax() {
 		log.info("upload ajax");
 	}
-
 	// upload file with ajax
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
-
+		
 		ArrayList<AttachFileDTO> list = new ArrayList<>();
 		String uploadFolder = "C:\\upload";
 
 		String uploadFolderPath = getFolder();
 
-		File uploadPath = new File(uploadFolder, uploadFolderPath);
+		File uploadPath = new File(uploadFolder, getFolder());
 
 		// make yyyy/mm/dd folder
 		if (uploadPath.exists() == false) {
@@ -115,10 +115,11 @@ public class UploadController {
 			AttachFileDTO attachDTO = new AttachFileDTO();
 
 			String uploadFileName = multipartFile.getOriginalFilename();
-
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);// IE Browser
+			log.info("only file name :" + uploadFileName );	
 			attachDTO.setFileName(uploadFileName);
 			UUID uuid = UUID.randomUUID();
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);// IE Browser
+			
 
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 

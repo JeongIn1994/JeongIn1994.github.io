@@ -28,21 +28,21 @@
 				
 				<h5>Category</h5>
 					<div class="custom-control custom-radio custom-control-inline">
-   						<input type="radio" class="custom-control-input" id="customRadio" name="category" value="seeds" checked>
+   						<input type="radio" class="custom-control-input" id="customRadio" name="category" value="seeds" <c:out value="${product.category eq 'seeds'?'checked':'' }" />>
     					<label class="custom-control-label" for="customRadio">Seeds</label>
   					</div>
   					<div class="custom-control custom-radio custom-control-inline">
-    					<input type="radio" class="custom-control-input" id="customRadio2" name="category" value="bottle">
+    					<input type="radio" class="custom-control-input" id="customRadio2" name="category" value="bottle" <c:out value="${product.category eq 'bottle'?'checked':'' }" />>
     					<label class="custom-control-label" for="customRadio2">Bottles</label>
   					</div> 
   					<div class="custom-control custom-radio custom-control-inline">
-    					<input type="radio" class="custom-control-input" id="customRadio3" name="category" value="etc">
+    					<input type="radio" class="custom-control-input" id="customRadio3" name="category" value="etc" <c:out value="${product.category eq 'etc+'?'checked':'' }" />>
     					<label class="custom-control-label" for="customRadio3">Etc</label>
   					</div> 
   					<hr>
 				 <div class="row">
 					<div class="form-group col-sm-4">
-						<label>Product Name</label><input class="form-control" name="pname" required>			
+						<label>Product Name</label><input class="form-control" name="pname" value='<c:out value="${product.pname}" />' required>			
 					</div>
 					<div class="form-group col-sm-4 uploadDiv">
 						<label>Thumbnail</label><input type="file" class="fileupload" multiple>
@@ -56,14 +56,14 @@
 				 <div class="row">
 					<div class="form-group col-sm-4">
 						<label>Price</label>
-						<input type="number" class="form-control" name="price" min="0" step="1000">													
+						<input type="number" class="form-control" name="price" min="0" step="1000" value='<c:out value="${product.price}" />'>													
 					</div>				 
 					<div class="form-group col-sm-4">
-						<label>Manufacturer</label><input class="form-control" name="manufacturer">			
+						<label>Manufacturer</label><input class="form-control" name="manufacturer" value='<c:out value="${product.manufacturer}" />' >			
 					</div>		
 					<div class="form-group col-sm-4">
 						<label>Country</label>
-						<input class="form-control" name="country">												
+						<input class="form-control" name="country" value='<c:out value="${product.country}" />'>												
 					</div>										
 				</div>
 				<div class="row">
@@ -78,17 +78,17 @@
 					</div>
 					<div class="form-group col-sm-4">
 						<label>Stock</label>
-						<input type="number" class="form-control" name="stock" min="0" step="1">												
+						<input type="number" class="form-control" name="stock" min="0" step="1" value='<c:out value="${product.stock}" />'>												
 					</div>																			
 					<div class="form-group col-sm-4">
 						<label>Product Weight(Unit : g)</label>
-						<input type="number" class="form-control" name="weight">												
+						<input type="number" class="form-control" name="weight" value='<c:out value="${product.weight}" />'>												
 					</div>		
 				</div>
 				<hr>	
 				<label><h5>Product Explain</h5></label>									
 					<div class="form-group">
-						 <textarea name="pexplain" id="editor" rows="30" cols="80">
+						 <textarea name="pexplain" id="editor" rows="30" cols="80" value='<c:out value="${product.pexplain}" />'>
                					
             			</textarea>
             			<script>
@@ -155,14 +155,13 @@
 				contentType : false,
 				data : formData,
 				type : 'POST',
-                beforeSend : function(xhr)
-                {
-                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-                },
 				dataType : 'json',
 				success : function(result){
-					console.log(result);					
+					console.log(result);
+					
+					
 				}
+				
 			})
 		})
 		//onclick submit button
