@@ -45,7 +45,7 @@
 						<label>Product Name</label><input class="form-control" name="pname" required>			
 					</div>
 					<div class="form-group col-sm-4 uploadDiv">
-						<label>Thumbnail</label><input type="file" class="fileupload" multiple>
+						<label>Thumbnail</label><input type="file" name="fileupload" multiple="multiple">
 					</div>
 					<div class="form-group col-sm-4 uploadResult">
 						 
@@ -132,38 +132,51 @@
 		}
 		//thumbnail button click event
 		var cloneObj = $('.uploadDiv').clone();	
-		$('.fileupload').on('change',function(e){
+		$("input[type='file']").on('change',function(e){
 			
 			var formData = new FormData();
-			var inputFile = $('.fileupload');
-			var files = inputFile[0].files;
+			 
+			var inputFile = $("input[name='fileupload']");
+			 
+		 	var files = inputFile[0].files;
+		 	
+		 	console.log(files[0]);
+		 	//if uploadfiles more than 2files, first file was be Thumbnail
+
 			
-			//if uploadfiles more than 2files, first file was be Thumbnail
-			if(files.length>1){
-				alert("Thumbnail File Only 1 File! First File was be Thumbnail !");
-				files = files[0];
-				$('.uploadDiv').html(cloneObj.html());
-			}
-			if(!checkExtension(files.name, files.size)){
+			for(var i=0; i< files.length;i++){
+			
+				if(files.length>1){
+					alert("Thumbnail File Only 1 File! First File was be Thumbnail !");
+					formData.append("uploadFile",files[0]);
+					break;
+				}else if(!checkExtension(files[i].name,files[i].size)){
 					return false;
-			}
-			formData.append("fileupload",files);
-			
-			$.ajax({
+				}
+				formData.append("uploadFile",files[0]);
+			 }
+			 
+			 $.ajax({
 				url : '/uploadAjaxAction',
-				processData : false,
-				contentType : false,
-				data : formData,
+				processData : false ,
+				contentType : false ,
+				beforeSend : function(xhr)
+	            {
+	            	xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	            },		
+				data : formData ,
 				type : 'POST',
-                beforeSend : function(xhr)
-                {
-                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-                },
 				dataType : 'json',
 				success : function(result){
-					console.log(result);					
+					
+					console.log(result);
+					
+// 					showUploadResult(result);
+					
+
 				}
-			})
+			 });//ajax end
+			
 		})
 		//onclick submit button
 		$('button[type="submit"]').on('click',function(e){			

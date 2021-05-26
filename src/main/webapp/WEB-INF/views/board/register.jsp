@@ -120,7 +120,7 @@
 </div>
 </div>
 <script type="text/javascript">
-	$(document).ready(function(e){
+	$(document).ready(function(e){	
 		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 		var maxSize = 5242880;
 		//extension check
@@ -157,6 +157,10 @@
 				url : '/uploadAjaxAction',
 				processData : false ,
 				contentType : false ,
+				beforeSend : function(xhr)
+	            {
+	            	xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	            },		
 				data : formData ,
 				type : 'POST',
 				dataType : 'json',
