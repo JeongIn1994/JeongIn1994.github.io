@@ -78,7 +78,6 @@
 
 	</div>
 
-
 	<form action="#" method="get" id="actionForm">
 		<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">
 		<input type="hidden" name="amount" value="${pageMaker.cri.amount }">
