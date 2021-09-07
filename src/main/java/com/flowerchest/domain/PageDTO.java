@@ -13,6 +13,7 @@ public class PageDTO {
 	
 	private int total;
 	private Criteria cri;
+	private MemberVO member;
 	
 	public PageDTO(Criteria cri,int total) {
 		this.cri = cri;

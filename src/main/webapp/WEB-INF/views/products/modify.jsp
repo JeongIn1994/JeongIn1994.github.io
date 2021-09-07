@@ -23,32 +23,37 @@
 			<div class="panel-heading" style="border-bottom:1px solid gray;padding-bottom: 5px"><h4>product Register</h4></div>
 			<!-- panel body start -->
 			<div class="panel-body" style="padding: 5px"></div>
-				<form role="form" action="/products/register" method="post">
+				<form role="form" action="/products/modify" method="post">
 				 <input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
 				
 				<h5>Category</h5>
 					<div class="custom-control custom-radio custom-control-inline">
-   						<input type="radio" class="custom-control-input" id="customRadio" name="category" value="seeds" <c:out value="${product.category eq 'seeds'?'checked':'' }" />>
+   						<input type="radio" class="custom-control-input" id="customRadio" name="category" value="seeds" <c:if test="${product.category eq 'seeds' }" ><c:out value='checked'/> </c:if>>
     					<label class="custom-control-label" for="customRadio">Seeds</label>
   					</div>
   					<div class="custom-control custom-radio custom-control-inline">
-    					<input type="radio" class="custom-control-input" id="customRadio2" name="category" value="bottle" <c:out value="${product.category eq 'bottle'?'checked':'' }" />>
+    					<input type="radio" class="custom-control-input" id="customRadio2" name="category" value="bottle" <c:if test="${product.category eq 'bottle' }" ><c:out value='checked'/> </c:if>>
     					<label class="custom-control-label" for="customRadio2">Bottles</label>
   					</div> 
   					<div class="custom-control custom-radio custom-control-inline">
-    					<input type="radio" class="custom-control-input" id="customRadio3" name="category" value="etc" <c:out value="${product.category eq 'etc+'?'checked':'' }" />>
+    					<input type="radio" class="custom-control-input" id="customRadio3" name="category" value="etc" <c:if test="${product.category eq 'etc' }" ><c:out value='checked'/> </c:if>>
     					<label class="custom-control-label" for="customRadio3">Etc</label>
   					</div> 
   					<hr>
 				 <div class="row">
 					<div class="form-group col-sm-4">
-						<label>Product Name</label><input class="form-control" name="pname" value='<c:out value="${product.pname}" />' required>			
+						<label>Product Name</label><input class="form-control" name="pname" required value="<c:out value='${product.pname }' />">			
 					</div>
 					<div class="form-group col-sm-4 uploadDiv">
-						<label>Thumbnail</label><input type="file" class="fileupload" multiple>
+						<label>Thumbnail</label><input type="file" name="fileupload" multiple>
 					</div>
 					<div class="form-group col-sm-4 uploadResult">
-						 
+						 <ul>
+						 	<li data-path=<c:out value='${product.uploadPath }'/> data-uuid=<c:out value='${product.uuid }'/> data-filename=<c:out value='${product.fileName }'/> >
+							<span><c:out value='${product.pname }'/></span>
+							<button type ='button' data-type='image'class ='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>
+							<img src="/display?fileName=<c:out value='${product.encodePath }'/>"></li>
+						 </ul>
 					</div>
 				</div>
 				<hr>
@@ -56,14 +61,14 @@
 				 <div class="row">
 					<div class="form-group col-sm-4">
 						<label>Price</label>
-						<input type="number" class="form-control" name="price" min="0" step="1000" value='<c:out value="${product.price}" />'>													
+						<input type="number" class="form-control" name="price" min="0" step="1000">													
 					</div>				 
 					<div class="form-group col-sm-4">
-						<label>Manufacturer</label><input class="form-control" name="manufacturer" value='<c:out value="${product.manufacturer}" />' >			
+						<label>Manufacturer</label><input class="form-control" name="manufacturer">			
 					</div>		
 					<div class="form-group col-sm-4">
 						<label>Country</label>
-						<input class="form-control" name="country" value='<c:out value="${product.country}" />'>												
+						<input class="form-control" name="country">												
 					</div>										
 				</div>
 				<div class="row">
@@ -78,17 +83,17 @@
 					</div>
 					<div class="form-group col-sm-4">
 						<label>Stock</label>
-						<input type="number" class="form-control" name="stock" min="0" step="1" value='<c:out value="${product.stock}" />'>												
+						<input type="number" class="form-control" name="stock" min="0" step="1">												
 					</div>																			
 					<div class="form-group col-sm-4">
 						<label>Product Weight(Unit : g)</label>
-						<input type="number" class="form-control" name="weight" value='<c:out value="${product.weight}" />'>												
+						<input type="number" class="form-control" name="weight">												
 					</div>		
 				</div>
 				<hr>	
 				<label><h5>Product Explain</h5></label>									
 					<div class="form-group">
-						 <textarea name="pexplain" id="editor" rows="30" cols="80" value='<c:out value="${product.pexplain}" />'>
+						 <textarea name="pexplain" id="editor" rows="30" cols="80">
                					
             			</textarea>
             			<script>
@@ -100,9 +105,9 @@
             			</script>					
 					</div>					
 									
-					<button type="submit" class="btn btn-primary">Submit</button>
+					<button type="submit" class="btn btn-primary">modify</button>
 					
-					<button type="reset" class="btn btn-info">Reset</button>	
+					<button type="reset" class="btn btn-info">delete</button>	
 					
 					<button type="button" class="btn btn-danger" onclick='history.back();'>Cancel</button>	
 							
@@ -110,6 +115,7 @@
 				</form>
 				<!-- form end -->
 		</div>
+
 		<!-- panel default end -->
 	</div>
 	<hr>
@@ -117,6 +123,22 @@
 	$(document).ready(function(){
 		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 		var maxSize = 5242880;
+		//uploadfile List Showup
+		var uploadResult = $(".uploadResult ul");		
+		function showUploadResult(uploadResultArr){
+			var str = "";
+			
+			$(uploadResultArr).each(function(i,obj){
+				var fileCallPath = encodeURIComponent(obj.uploadPath +"/s_"+obj.uuid+"_"+obj.fileName);
+				
+				str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"'>";
+				str += "<span>" + obj.fileName + "</span>";
+				str += "<button type ='button' data-file=\'"+fileCallPath+"\'data-type='image'class ='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src='/display?fileName=" + fileCallPath +"'></li>";
+				console.log(obj);
+			})
+			uploadResult.append(str);
+		}
 		//extension check
 		function checkExtension(fileName,fileSize){
 			
@@ -132,46 +154,65 @@
 		}
 		//thumbnail button click event
 		var cloneObj = $('.uploadDiv').clone();	
-		$('.fileupload').on('change',function(e){
+		$("input[type='file']").on('change',function(e){		
+			var formData = new FormData();	 
+			var inputFile = $("input[name='fileupload']");			 
+		 	var files = inputFile[0].files;		 	
+		 	console.log(files[0]);
+		 	//if uploadfiles more than 2files, first file was be Thumbnail			
+			for(var i=0; i< files.length;i++){
 			
-			var formData = new FormData();
-			var inputFile = $('.fileupload');
-			var files = inputFile[0].files;
-			
-			//if uploadfiles more than 2files, first file was be Thumbnail
-			if(files.length>1){
-				alert("Thumbnail File Only 1 File! First File was be Thumbnail !");
-				files = files[0];
-				$('.uploadDiv').html(cloneObj.html());
-			}
-			if(!checkExtension(files.name, files.size)){
+				if(files.length>1){
+					alert("Thumbnail File Must Be Only 1 File! First File was be Thumbnail !");
+					formData.append("uploadFile",files[0]);
+					break;
+				}else if(!checkExtension(files[i].name,files[i].size)){
 					return false;
-			}
-			formData.append("fileupload",files);
-			
-			$.ajax({
+				}
+				formData.append("uploadFile",files[0]);
+			 }	
+		 	//upload ajax
+			 $.ajax({
 				url : '/uploadAjaxAction',
-				processData : false,
-				contentType : false,
-				data : formData,
+				processData : false ,
+				contentType : false ,
+				beforeSend : function(xhr)
+	            {
+	            	xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	            },		
+				data : formData ,
 				type : 'POST',
 				dataType : 'json',
-				success : function(result){
-					console.log(result);
-					
-					
+				success : function(result){					
+					showUploadResult(result);
 				}
-				
-			})
-		})
+			 });//ajax end
+			
+		})		
+		//uploadfile delete ajax
+		$(".uploadResult").on("click","button",function(e){
+			$('.uploadResult ul li').remove();
+		});//end delete uploadfile ajax
 		//onclick submit button
+		var formObj = $("form[role='form']");
 		$('button[type="submit"]').on('click',function(e){			
 			e.preventDefault();
+			var str ="";
+			$('.uploadResult ul li').each(function(i,obj){
+				var jobj = $(obj);	
+				var filePath= encodeURIComponent(jobj.data('path') + '/s_' +jobj.data('uuid')+ '_' +jobj.data('filename') );
+				str += "<input type='hidden' name='attachImage.fileName' value='"+jobj.data("filename")+"'>";
+				str += "<input type='hidden' name='attachImage.uuid' value='"+jobj.data("uuid")+"'>";
+				str += "<input type='hidden' name='attachImage.uploadPath' value='"+jobj.data("path")+"'>";	
+				str += "<input type='hidden' name='attachImage.encodePath' value='"+filePath+"'>";	
+			})
+			str += "<input type='hidden' name='pid' value = '${product.pid}'>"
 			//psize calculate input
-			var psize = $('.pwidth').val() + '*' + $('.pheight').val();
-			$('.psize').val(psize);
-
-		})
+			var psize = $('.pwidth').val() + 'x' + $('.pheight').val();
+			$('.psize').val(psize);			
+			formObj.append(str).submit();
+		
+		});
 	})	
 	</script>
 </div>

@@ -92,7 +92,7 @@ public class BoardController {
 	//delete post
 	@PreAuthorize("principal.username == #writer")
 	@PostMapping("/remove")
-	public String remove(@RequestParam("bno")Long bno,RedirectAttributes rttr,@ModelAttribute("cri")Criteria cri) {
+	public String remove(@RequestParam("bno")Long bno,RedirectAttributes rttr,@ModelAttribute("cri")Criteria cri,String writer) {
 		log.info("====Delete Board====");
 		
 		

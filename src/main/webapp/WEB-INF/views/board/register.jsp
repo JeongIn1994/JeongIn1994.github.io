@@ -66,14 +66,7 @@
 					
 					<div class="form-group col-sm-4">
 						<label>Writer</label>
-						<c:choose>
-							<c:when test="${pinfo eq 'anonymousUser' }">
-								<input class="form-control" name="writer">
-							</c:when>
-							<c:when test="${pinfo ne 'anonymousUser' }">
-								<input class="form-control" name="writer" value='${pinfo.username }' readonly>
-							</c:when>				
-						</c:choose>
+						<input class="form-control" name="writer" value='${pinfo.username }' readonly>
 					</div>
 				</div>	
 					<div class="form-group">
@@ -123,6 +116,7 @@
 	$(document).ready(function(e){	
 		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 		var maxSize = 5242880;
+		var userNameCheck = false;
 		//extension check
 		function checkExtension(fileName,fileSize){
 			
@@ -245,7 +239,6 @@
 			}
 		});//ajax end
 	});
-		
 	});
 
 </script>

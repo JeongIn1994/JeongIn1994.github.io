@@ -21,9 +21,11 @@ public interface ProductMapper {
 	
 	public ProductVO read(Long pid);
 	
-	public int delete(Long bno);
+	public int delete(Long pid);
 	
-	public int update(ProductVO board);
+	public int update(ProductVO product);
+	
+	public int delete(ProductVO vo);
 	
 	public int getTotalCount(Criteria cri);
 	

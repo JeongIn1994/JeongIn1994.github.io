@@ -3,55 +3,49 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.flowerchest.mapper.ProductMapper">
- 	<!-- sql repository -->
-<!--  	<sql id="criteria"> -->
-<!--  		<trim prefix="(" suffix=") AND" prefixOverrides="OR"> -->
-<!--  			<foreach collection="typeArr" item="type"> -->
-<!--  				<trim prefix="OR"> -->
-<!--  					<choose> -->
-<!--  						<when test="type =='T'.toString()"> -->
-<!--  							title like '%'||#{keyword}||'%' -->
-<!--  						</when> -->
-<!--  						<when test="type =='C'.toString()"> -->
-<!--  							content like '%'||#{keyword}||'%' -->
-<!--  						</when> 						 -->
-<!--  						<when test="type =='W'.toString()"> -->
-<!--  							writer like '%'||#{keyword}||'%' -->
-<!--  						</when> 						 -->
-<!--  					</choose> -->
-<!--  				</trim> -->
-<!--  			</foreach> -->
-<!--  		</trim> -->
-<!--  	</sql> -->
+<!--  	sql repository -->
+ 	<sql id="criteria">
+ 		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+ 			<foreach collection="typeArr" item="type">
+ 				<trim prefix="OR">
+ 					<choose>
+ 						<when test="type =='P'.toString()">
+ 							p.pname like '%'||#{keyword}||'%'
+ 						</when>						
+ 					</choose>
+ 				</trim>
+ 			</foreach>
+ 		</trim>
+ 	</sql>
  	
  	<!-- List Paging -->
  	<select id="getListWithPaging" resultType="com.flowerchest.domain.ProductVO">
  		<![CDATA[ 
-  		select pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock from 
- 			(select /*+INDEX_DESC(tbl_Product pk_Product)*/ rownum rn,pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock 
- 			 from
-			 tbl_Product 
+  		select p.pid,p.pname,p.pexplain,price,p.category,p.manufacturer,p.regdate,p.psize,p.weight,p.stock,a.uuid,a.uploadpath,a.filename,a.encodepath  
+			from
+ 			(select /*+ INDEX_DESC(p pk_product)*/ rownum rn,p.pid,p.pname,p.pexplain,price,p.category,p.manufacturer,p.regdate,p.psize,p.weight,p.stock
+				from tbl_Product p
   			where ]]> 
-<!--  			 <include refid="criteria"></include> -->
+ 			 <include refid="criteria"></include>
  			<![CDATA[
- 			 rownum <= #{pageNum} * #{amount}
+ 			 rownum <= #{pageNum} * #{amount} 
  			) 
- 		where rn > (#{pageNum}-1) * #{amount} 
+ 			p full outer join tbl_attach a on p.pid = a.pid where rn > (#{pageNum}-1) * #{amount} order by pid DESC
   		]]>
  	
  	</select>
   	<select id="getListWithPagingAndCategory" resultType="com.flowerchest.domain.ProductVO">
  		<![CDATA[ 
-  		select pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock from 
- 			(select /*+INDEX_DESC(tbl_Product pk_Product)*/ rownum rn,pid,pname,pexplain,price,category,manufacturer,regdate,psize,weight,stock 
- 			 from
-			 tbl_Product 
+  		select p.pid,p.pname,p.pexplain,price,p.category,p.manufacturer,p.regdate,p.psize,p.weight,p.stock,a.uuid,a.uploadpath,a.filename,a.encodepath  
+			from
+ 			(select /*+ INDEX_DESC(p pk_product)*/ rownum rn,p.pid,p.pname,p.pexplain,price,p.category,p.manufacturer,p.regdate,p.psize,p.weight,p.stock
+				from tbl_Product p
   			where ]]> 
-<!--  			 <include refid="criteria"></include> -->
+ 			 <include refid="criteria"></include>
  			<![CDATA[
- 			 rownum <= #{pageNum} * #{amount} And category=#{category}
+ 			 rownum <= #{pageNum} * #{amount} And category=#{category} 
  			) 
- 		where rn > (#{pageNum}-1) * #{amount} 
+ 		p full outer join tbl_attach a on p.pid = a.pid where rn > (#{pageNum}-1) * #{amount} order by pid DESC
   		]]>	
  	</select>	
  	<!-- Get List -->
@@ -61,7 +55,9 @@
  	
  	<!-- Get Post -->
  	<select id="read" resultType="com.flowerchest.domain.ProductVO">
- 		select * from tbl_Product where pid = #{pid}
+ 		select p.pid,p.pname,p.pexplain,price,p.category,p.manufacturer,p.country,p.regdate,p.psize,p.weight,p.stock,a.uuid,a.uploadpath,a.filename,a.encodepath 
+			from 
+				tbl_Product p full outer join tbl_attach a on p.pid = a.pid where p.pid=#{pid}
  	</select>
  	
  	<!-- Post Insert -->
@@ -80,19 +76,24 @@
  	</insert>
  	
  	<!--  delete Post -->
-<!--  	<delete id="delete"> -->
-<!--  		delete from tbl_Product where bno = #{bno}  -->
-<!--  	</delete> -->
+ 	<delete id="delete">
+ 		delete from tbl_Product where pid = #{pid} 
+ 	</delete>
  	<!--  Update Post -->
-<!--  	<update id="update"> -->
-<!--  		update tbl_Product -->
-<!--  		set title=#{title}, -->
-<!--  		content = #{content}, -->
-<!--  		writer = #{writer}, -->
-<!--  		updateDate = sysdate, -->
-<!--  		category = #{category} -->
-<!--  		where bno = #{bno}	 -->
-<!--  	</update> -->
+ 	<update id="update">
+ 		update tbl_Product
+ 		set pname = #{pname},
+ 		pexplain = #{pexplain},
+ 		updateDate = sysdate,
+ 		category = #{category},
+ 		price = #{price},
+ 		manufacturer = #{manufacturer},
+ 		country = #{country},
+ 		psize = #{psize},
+ 		weight = #{weight},
+ 		stock = #{stock}
+ 		where pid = #{pid}	
+ 	</update>
  	<!-- Get Post Count -->
  	<select id="getTotalCount" resultType="int">
  		select count(*) from tbl_product where

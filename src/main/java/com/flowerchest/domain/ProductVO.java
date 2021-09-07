@@ -19,6 +19,11 @@ public class ProductVO {
 	private Long weight;
 	private Long stock;
 	
+	private String uuid;
+	private String uploadPath;
+	private String fileName;
+	private String encodePath;
+	
 	private ProductAttachVO attachImage;
 	
 	

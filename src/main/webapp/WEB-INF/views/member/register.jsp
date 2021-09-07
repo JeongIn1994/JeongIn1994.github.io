@@ -119,12 +119,9 @@
 			var nameChk = false;
 			var idChk = false;
 			var pwChk = false;
-			var emailChk = false;
-			
+			var emailChk = false;			
 			//email auth code
-			var code ="";
-			
-			
+			var code ="";				
 			//email btn onclick			
 			$('button[name="emailAuthBtn"]').on('click',function(e){
 				var email = $('#email').val();
@@ -134,12 +131,11 @@
 					url : '/member/emailChk?email='+ email,
 					success:function(data){
 						$('.authNum').show();
-						code = data;
-						
-					}
-				
+						code = data;					
+					}			
 				})
 			})
+			//email chk
 			$('button[name="emailAuthChkBtn"]').on('click',function(e){
 				e.preventDefault();
 				var inputNum = $('input[name="emailChk"]').val();
@@ -161,7 +157,7 @@
 					return;
 				}
 				$('#nameFormSpan').html('<p style="color : green;"><i class="fa fa-check" aria-hidden="true">You Can use This Name</i></p>');
-				nameChk=true;
+				nameChk = true;
 				
 			});			
 			

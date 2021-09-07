@@ -22,4 +22,8 @@ public interface ProductService {
 	public int getToalWithCategory(Criteria cri);
 	
 	public ProductVO get(Long pid);
+
+	public boolean modify(ProductVO vo);
+
+	public boolean remove(Long pid);
 }

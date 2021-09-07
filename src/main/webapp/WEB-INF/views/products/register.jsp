@@ -45,10 +45,12 @@
 						<label>Product Name</label><input class="form-control" name="pname" required>			
 					</div>
 					<div class="form-group col-sm-4 uploadDiv">
-						<label>Thumbnail</label><input type="file" name="fileupload" multiple="multiple">
+						<label>Thumbnail</label><input type="file" name="fileupload" multiple>
 					</div>
 					<div class="form-group col-sm-4 uploadResult">
+						 <ul>
 						 
+						 </ul>
 					</div>
 				</div>
 				<hr>
@@ -117,6 +119,22 @@
 	$(document).ready(function(){
 		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 		var maxSize = 5242880;
+		//uploadfile List Showup
+		var uploadResult = $(".uploadResult ul");		
+		function showUploadResult(uploadResultArr){
+			var str = "";
+			
+			$(uploadResultArr).each(function(i,obj){
+				var fileCallPath = encodeURIComponent(obj.uploadPath +"/s_"+obj.uuid+"_"+obj.fileName);
+				
+				str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"'>";
+				str += "<span>" + obj.fileName + "</span>";
+				str += "<button type ='button' data-file=\'"+fileCallPath+"\'data-type='image'class ='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src='/display?fileName=" + fileCallPath +"'></li>";
+				console.log(obj);
+			})
+			uploadResult.append(str);
+		}
 		//extension check
 		function checkExtension(fileName,fileSize){
 			
@@ -132,30 +150,24 @@
 		}
 		//thumbnail button click event
 		var cloneObj = $('.uploadDiv').clone();	
-		$("input[type='file']").on('change',function(e){
-			
-			var formData = new FormData();
-			 
-			var inputFile = $("input[name='fileupload']");
-			 
-		 	var files = inputFile[0].files;
-		 	
+		$("input[type='file']").on('change',function(e){		
+			var formData = new FormData();	 
+			var inputFile = $("input[name='fileupload']");			 
+		 	var files = inputFile[0].files;		 	
 		 	console.log(files[0]);
-		 	//if uploadfiles more than 2files, first file was be Thumbnail
-
-			
+		 	//if uploadfiles more than 2files, first file was be Thumbnail			
 			for(var i=0; i< files.length;i++){
 			
 				if(files.length>1){
-					alert("Thumbnail File Only 1 File! First File was be Thumbnail !");
+					alert("Thumbnail File Must Be Only 1 File! First File was be Thumbnail !");
 					formData.append("uploadFile",files[0]);
 					break;
 				}else if(!checkExtension(files[i].name,files[i].size)){
 					return false;
 				}
 				formData.append("uploadFile",files[0]);
-			 }
-			 
+			 }	
+		 	//upload ajax
 			 $.ajax({
 				url : '/uploadAjaxAction',
 				processData : false ,
@@ -167,25 +179,51 @@
 				data : formData ,
 				type : 'POST',
 				dataType : 'json',
-				success : function(result){
-					
-					console.log(result);
-					
-// 					showUploadResult(result);
-					
-
+				success : function(result){					
+					showUploadResult(result);
 				}
 			 });//ajax end
 			
-		})
+		})		
+		//uploadfile delete ajax
+		$(".uploadResult").on("click","button",function(e){
+		var targetFile = $(this).data("file");
+		var type = $(this).data("type");
+		
+		var targetLi = $(this).closest("li");
+			$.ajax({
+				url : '/deleteFile',
+				data : {fileName : targetFile,type:type},
+				dataType : 'text',
+				beforeSend : function(xhr)
+	            {
+	            	xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	            },	
+				type : 'POST',
+					success : function(result){
+						targetLi.remove();
+					}
+			})
+		});//end delete uploadfile ajax
 		//onclick submit button
+		var formObj = $("form[role='form']");
 		$('button[type="submit"]').on('click',function(e){			
 			e.preventDefault();
+			var str ="";
+			$('.uploadResult ul li').each(function(i,obj){
+				var jobj = $(obj);	
+				var filePath= encodeURIComponent(jobj.data('path') + '/s_' +jobj.data('uuid')+ '_' +jobj.data('filename') );
+				str += "<input type='hidden' name='attachImage.fileName' value='"+jobj.data("filename")+"'>";
+				str += "<input type='hidden' name='attachImage.uuid' value='"+jobj.data("uuid")+"'>";
+				str += "<input type='hidden' name='attachImage.uploadPath' value='"+jobj.data("path")+"'>";	
+				str += "<input type='hidden' name='attachImage.encodePath' value='"+filePath+"'>";	
+			})
 			//psize calculate input
-			var psize = $('.pwidth').val() + '*' + $('.pheight').val();
-			$('.psize').val(psize);
-
-		})
+			var psize = $('.pwidth').val() + 'x' + $('.pheight').val();
+			$('.psize').val(psize);			
+			formObj.append(str).submit();
+		
+		});
 	})	
 	</script>
 </div>

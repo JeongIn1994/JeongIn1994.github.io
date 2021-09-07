@@ -57,10 +57,9 @@ body {
 </style>
 </head>
 <body>
-
 	<sec:authentication property="principal" var="pinfo" />
 	<div class="jumbotron text-center" style="margin-bottom: 0;width: 100%">
-		<h1>Flower Chest</h1>
+		<h1>Shopping Mall</h1>
 		<p>Resize this responsive page to see the effect!</p>
 	</div>
 
@@ -74,17 +73,28 @@ body {
 				<li class="nav-item"><a class="nav-link" href="#"
 					onclick="location.href='/board/list'">Board</a></li>
 				<li class="nav-item"><a class="nav-link" href="#"
-					onclick="location.href='/products/list?category=all'">Product</a></li>
-				<sec:authorize access="isAuthenticated()">	
-				<li class="nav-item"><a class="nav-link" href="#"
-					onclick="location.href='/member/${pinfo.username}'">MyPages</a></li>		
-				</sec:authorize>			
+					onclick="location.href='/products/list?category=all'">Product</a></li>	
 			</ul>
 				<sec:authorize access="isAuthenticated()">
 					<form role="form" method="post" action="/Logins/Logout" class="form-inline my-2 my-lg-0" style="margin-right: 5px;">
-						<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }">
-						<span style="color: white;margin-right: 5px;">Welcome ! <c:out value="${pinfo.username }" /></span>
-						<button class="mypage btn btn-primary"style="color: white;margin-right: 5px;"><i class="fa fa-id-badge" aria-hidden="true"></i>MyPage</button>
+						<input type="hidden" name="${_csrf.parameterName }"  value="${_csrf.token }" class='csrf'>
+						<span style="color: white;margin-right: 5px;">Welcome ! </span>
+						 <div class="dropdown">
+ 							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 5px;">
+    							<c:out value='${pinfo.username }' /><sec:authorize access="hasRole('ROLE_ADMIN')"><i class="fa fa-check-circle" aria-hidden="true"></i></sec:authorize>
+  							</button>
+  							<div class="dropdown-menu">
+    							<a class="dropdown-item mypage" href="#"><i class="fa fa-user" aria-hidden="true"></i>Mypage</a>
+    							<a class="dropdown-item activityHistory" href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>Activity History</a>
+    							<sec:authorize access="hasRole('ROLE_USER')">
+    								<a class="dropdown-item kartList" href="#"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i>Kart_list</a>
+    								<a class="dropdown-item purchaseList" href="#"><i class="fa fa-shopping-basket" aria-hidden="true"></i>Purchase_list</a>
+    							</sec:authorize>
+    							<sec:authorize access="hasRole('ROLE_ADMIN')">
+    								<a class="dropdown-item userList" href="#"><i class="fa fa-users" aria-hidden="true"></i>User_list</a>
+    							</sec:authorize>
+  							</div>
+						</div> 
 						<button class="logout btn btn-info"style="color: white;margin-right: 5px;"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</button>
 					</form>
 				</sec:authorize>
@@ -98,14 +108,35 @@ body {
 		
 	</nav>
 	<script>
+	$(document).ready(function(e){	
+		var form = $("form[role='form']");
+		//mypage button onclick event start
 		$(".mypage").on("click",function(e){
-			
-			var form = $("form[role='form']");
+			$('input').remove(".csrf")
 			e.preventDefault();
 			<sec:authorize access="isAuthenticated()">
-				form.attr("action","/Mypage/<c:out value='${pinfo.username}' />");
+				var str = "<input type='hidden' value='${pinfo.username}' name='userid'>";
+				form.attr("method","get>");
+				form.attr("action","/member/myPage");
 			</sec:authorize>
-			form.submit();
+			form.append(str).submit();
 		})
+		//mypage onclick event end
+		$(".activityHistory").on('click',function(e){
+			$('input').remove(".csrf")		
+			e.preventDefault();
+			<sec:authorize access="isAuthenticated()">
+				var str = "<input type='hidden' value='${pinfo.username}' name='userid'>";
+				form.attr("method","get>");
+				form.attr("action","/member/userHistory");
+			</sec:authorize>
+			form.append(str).submit();
+		})
+		$('.userList').on('click',function(e){
+			e.preventDefault();
+			window.open("/member/getAllUser",'getAllUser','width=500,height=500,left=340,top=340');
+		})
+		
+	})	
 	</script>
 </body>

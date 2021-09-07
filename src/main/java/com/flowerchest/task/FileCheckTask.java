@@ -14,7 +14,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.flowerchest.domain.BoardAttachVO;
+import com.flowerchest.domain.ProductAttachVO;
 import com.flowerchest.mapper.BoardAttachMapper;
+import com.flowerchest.mapper.ProductAttachMapper;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -22,8 +24,12 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Component
 public class FileCheckTask {
+	
 	@Setter(onMethod_ = @Autowired)
 	private BoardAttachMapper attachMapper;
+	
+	@Setter(onMethod_ = @Autowired)
+	private ProductAttachMapper pAttachMapper;
 	
 	private String getFolderYesterDay() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,10 +44,8 @@ public class FileCheckTask {
 	}
 	@Scheduled(cron = " 0 0 2 * * *")
 	public void checkFiles() throws Exception {
-		log.warn("File Check Task run");
-		log.warn(new Date());
 		
-		List<BoardAttachVO> fileList = attachMapper.getOldFiles();
+		List<ProductAttachVO> fileList = pAttachMapper.getOldFiles();
 		
 		List<Path> fileListPaths = fileList.stream().map(vo->Paths.get("C:\\upload\\",vo.getUploadPath(),vo.getUuid()+"_"+vo.getFileName())).collect(Collectors.toList());
 		

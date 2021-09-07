@@ -5,15 +5,15 @@
  <mapper namespace="com.flowerchest.mapper.ProductAttachMapper">
  	
  	<insert id="insert">
- 		insert into tbl_attach (uuid,uploadpath,filename,pid)
- 		values (#{uuid},#{uploadPath},#{fileName},#{pid})
+ 		insert into tbl_attach (uuid,uploadpath,filename,pid,encodepath)
+ 		values (#{uuid},#{uploadPath},#{fileName},#{pid},#{encodePath})
  	</insert>
  
  	<delete id="delete">
  		delete from tbl_attach where uuid = #{uuid}
  	</delete>
  	
- 	<select id="findByBno" resultType="com.flowerchest.domain.ProductAttachVO">
+ 	<select id="findByPid" resultType="com.flowerchest.domain.ProductAttachVO">
  		select * from tbl_attach where pid = #{pid}
  	</select>
 

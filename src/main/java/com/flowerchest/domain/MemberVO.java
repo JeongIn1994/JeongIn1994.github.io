@@ -3,9 +3,12 @@ package com.flowerchest.domain;
 import java.util.Date;
 import java.util.List;
 
+
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class MemberVO {
 	
 	private String userid;
@@ -19,4 +22,6 @@ public class MemberVO {
 	private Date regDate;
 	private Date updateDate;
 	private List<AuthVO> authList;
+	private List<BoardVO> boardList;
+	
 }

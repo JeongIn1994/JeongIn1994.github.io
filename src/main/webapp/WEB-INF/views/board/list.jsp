@@ -12,7 +12,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div class="container" style="padding: 15px">
-  <h2>Common Board</h2>
+  <h2>User Board</h2>
   <p>Posting Yourself Freedomly!</p>            
   <table class="table table-hover">
     <thead>

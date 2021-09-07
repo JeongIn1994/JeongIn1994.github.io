@@ -4,7 +4,20 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
  <mapper namespace="com.flowerchest.mapper.MemberMapper">
- 	
+ 	<!-- sql repository -->
+ 	<sql id="criteria">
+ 		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+ 			<foreach collection="typeArr" item="type">
+ 				<trim prefix="OR">
+ 					<choose>
+ 						<when test="type =='U'.toString()">
+ 							mem.userid like '%'||#{keyword}||'%'
+ 						</when>		
+ 					</choose>
+ 				</trim>
+ 			</foreach>
+ 		</trim>
+ 	</sql>
  	<resultMap type="com.flowerchest.domain.MemberVO" id="memberMap">
  	
  		<id property="userid" column="userid"/>
@@ -17,7 +30,6 @@
  		<result property="regDate" column="regdate"/>
  		<result property="updateDate" column="updateDate"/>
  		<collection property="authList" resultMap="authMap"></collection>
- 	
  	</resultMap>
  	
  	<resultMap type="com.flowerchest.domain.AuthVO" id="authMap">
@@ -27,20 +39,93 @@
  	
  	</resultMap>
  	
+ 	<resultMap type="com.flowerchest.domain.MemberVO" id="boardMapwithMember">
+ 		<id property="userid" column="userid"/>
+ 		<result property="userid" column="userid"/>
+ 		<collection property="boardList" resultMap="boardMap"></collection>
+ 	</resultMap>
+ 	
+ 	<resultMap type="com.flowerchest.domain.BoardVO" id="boardMap"> 	
+ 		<result property="bno" column="bno"/>
+ 		<result property="title" column="title"/>
+ 		<result property="writer" column="writer"/>
+ 		<result property="regdate" column="regdate"/>
+ 		<result property="updateDate" column="updateDate"/>
+ 	</resultMap>
+	
  	<select id="read" resultMap="memberMap">
  		Select 
- 			mem.userid, userpw, username, enable, address, phonenumber, regdate, updateDate, auth
+ 			mem.userid, userpw, username, enable, address, phonenumber, regdate, updateDate, auth, email
  		From
  			tbl_member mem Left Outer Join tbl_member_auth auth On mem.userid = auth.userid
  		Where mem.userid = #{userid}		
  	</select>
  	
+ 	 <select id="getAllMember" resultMap="memberMap">
+ 		<![CDATA[ 
+ 		select userid, username, enable, address, phonenumber, regdate, updateDate, auth, email
+ 			from (select /*+INDEX_DESC(tbl_member REGDATE_MEMBER)*/rownum rn, mem.userid,  mem.username,
+ 					mem.enable, mem.address, mem.phonenumber, mem.regdate, mem.updateDate, auth.auth, mem.email
+ 						from
+ 			  		tbl_member mem left OUTER join tbl_member_auth auth on mem.userid =  auth.userid
+ 						where ]]>
+ 			 <include refid="criteria"></include>
+ 			 <![CDATA[
+ 			rownum <= #{pageNum} * #{amount}
+ 			)
+ 		where rn > (#{pageNum}-1) * #{amount} 
+ 		]]>	
+ 	</select>
+ 	
+ 	<select id="readMemberHistroy" resultMap="boardMapwithMember">
+ 		Select userid,bno,writer,title,regdate,updateDate
+			From(
+			<![CDATA[
+			select  /*+INDEX_DESC(tbl_board pk_board)*/ mem.userid, board.bno, board.title,  board.writer, board.regdate, board.updateDate
+        		from tbl_member mem left Outer Join tbl_board board On mem.userid = board.writer   )
+			where userid =#{userid} And regdate > TO_CHAR(SYSDATE-7,'YYYYMMDD') 
+			]]>
+ 	</select>
  	<insert id="insert">
  		Insert Into 
  			tbl_member(userid, userpw, username,address, phonenumber,email)
  		Values(#{userid},#{userpw},#{userName},#{address},#{phoneNumber},#{email})
  	</insert>
  	
+ 	<update id="update">
+ 		update tbl_member
+ 		set username=#{userName},
+ 		phonenumber = #{phoneNumber},
+ 		userpw = #{userpw},
+ 		email = #{email},
+ 		updateDate = sysdate,
+ 		address = #{address}
+ 		where userid = #{userid}	
+ 	</update>
+ 	<update id="updateWithNotPassword">
+ 		update tbl_member
+ 		set username=#{userName},
+ 		phonenumber = #{phoneNumber},
+ 		email = #{email},
+ 		updateDate = sysdate,
+ 		address = #{address}
+ 		where userid = #{userid}	
+ 	</update>
+ 	<update id="updateOnlyPassword">
+ 		update tbl_member
+ 		set userpw = #{userpw}
+ 		where userid = #{userid}
+ 	</update>
  	
+ 	<delete id="remove">
+ 		delete from tbl_member where userid = #{userid} 
+ 	</delete>
+ 	<select id="getTotalCount" resultType="int">
+ 		 select count(*) from tbl_member mem where
+ 		<include refid="criteria"></include> 
+ 		<![CDATA[
+ 			regdate<= sysdate
+ 		]]>
+ 	</select>
  	
  </mapper>
